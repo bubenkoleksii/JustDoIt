@@ -1,15 +1,15 @@
 ﻿using System.Diagnostics;
-using JustDoIt.WebApp.Models;
+using JustDoIt.WebApp.ViewModels;
 using JustDoIt.WebApp.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JustDoIt.WebApp.Controllers;
 
-public class HomeController : Controller
+public class IndexController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<IndexController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public IndexController(ILogger<IndexController> logger)
     {
         _logger = logger;
     }

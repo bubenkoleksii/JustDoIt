@@ -1,4 +1,4 @@
-namespace JustDoIt.WebApp.Models;
+namespace JustDoIt.WebApp.ViewModels;
 
 public class ErrorViewModel
 {
