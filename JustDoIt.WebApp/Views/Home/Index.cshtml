@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-8">
+        <span class="my-title">JustDoIt</span><span> Job Manager</span>
+    </h1>
+
+    <div class="content-container display-2">
+        <div class="content-container__job-container">
+            <div class="content-container__job-container__title">
+                <h2 class="my-second-title">Jobs</h2>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Job</button>
+            </div>
+
+            <div class="jobs-list">
+                <div class="jobs-list__item">
+                    <h3 class="list-title job-name">Name</h3>
+                    <h3 class="list-title job-category">Category</h3>
+                    <h3 class="list-title job-date">Due date</h3>
+                    <h3 class="list-title job-status">Status</h3>
+                    <h3 class="list-title job-actions">Actions</h3>
+                </div>
+
+                <hr/>
+
+                <div class="jobs-list__item">
+                    <h3 class="list-item job-name">Name</h3>
+                    <h3 class="list-item job-category">Category</h3>
+                    <h3 class="list-item job-date">Apr 14 2023 14:32</h3>
+                    <h3 class="list-item job-status">Status</h3>
+
+                    <div class="job-actions">
+                        <button type="button" class="btn btn-warning btn-80">Change</button>
+                        <button type="button" class="btn btn-danger btn-80">Remove</button>
+                    </div>
+                </div>
+
+                <hr/>
+            </div>
+        </div>
+
+        <div class="content-container__categories-container">
+            <div class="content-container__categories-container__title">
+                <h2 class="my-second-title">Categories</h2>
+                <button type="button" class="btn btn-success">Add Category</button>
+            </div>
+
+            <div class="categories-list">
+                <div class="categories-list__item">
+                    <h3 class="list-title category-name">Name</h3>
+                    <h3 class="list-title category-count">Jobs</h3>
+                    <h3 class="list-title category-actions">Actions</h3>
+                </div>
+
+                <hr/>
+
+                <div class="categories-list__item">
+                    <h3 class="list-item category-name">Family</h3>
+                    <h3 class="list-item category-count">5</h3>
+
+                    <div class="category-actions">
+                        <button type="button" class="btn btn-primary btn-80">Choose</button>
+                        <button type="button" class="btn btn-warning btn-80">Change</button>
+                        <button type="button" class="btn btn-danger btn-80">Remove</button>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="categories-list__item">
+                    <h3 class="list-item category-name">Family</h3>
+                    <h3 class="list-item category-count">5</h3>
+
+                    <div class="category-actions">
+                        <!--<button type="button" class="btn btn-primary btn-80">Choose</button>-->
+                        <button type="button" class="btn btn-warning btn-80">Change</button>
+                        <button type="button" class="btn btn-danger btn-80">Remove</button>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="categories-list__item">
+                    <h3 class="list-item category-name">Family</h3>
+                    <h3 class="list-item category-count">5</h3>
+
+                    <div class="category-actions">
+                        <button type="button" class="btn btn-primary btn-80">Choose</button>
+                        <button type="button" class="btn btn-warning btn-80">Change</button>
+                        <button type="button" class="btn btn-danger btn-80">Remove</button>
+                    </div>
+                </div>
+
+                <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adding job</h5>
+            </div>
+
+            <div class="modal-body">
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
