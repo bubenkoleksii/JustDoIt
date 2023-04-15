@@ -11,7 +11,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\PartialViews\" />
+	  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
 	</ItemGroup>
 
 </Project>

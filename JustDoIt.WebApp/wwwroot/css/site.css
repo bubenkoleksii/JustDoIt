@@ -80,22 +80,71 @@ select { font: inherit; }
 body { background-color: var(--bg-color); }
 
 * {
-    color: var(--main-color);
     font-family: 'PT Sans Caption', sans-serif;
     font-family: 'Raleway', sans-serif;
-    font-size: 22px;
     font-weight: 500;
+}
+
+h1, h2, h2, h4, h5, h6 {
+    color: var(--main-color)
 }
 
 h2 { font-size: 22px; }
 
 button { width: 200px; }
 
+input {
+    font-size: 14px;
+}
+
+label {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
 .btn-80 {
     font-size: 14px;
     height: 25px;
     padding: 3px;
     width: 80px;
+}
+
+.check-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+.d-row {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+}
+
+.marb {
+    margin-bottom: 5px;
+}
+
+.d-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.label-container {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    font-size: 14px;
+}
+
+.fs-14 {
+    font-size: 14px;
+} 
+
+.zoom2 {
+    zoom: 2;
 }
 
 .my-container {
@@ -120,7 +169,7 @@ button { width: 200px; }
     display: flex;
     gap: 100px;
     justify-content: space-between;
-    padding: 30px;
+    padding: 20px;
 }
 
 .content-container__job-container {

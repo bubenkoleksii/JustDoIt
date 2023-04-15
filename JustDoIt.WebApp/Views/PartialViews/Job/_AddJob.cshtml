@@ -1,0 +1,62 @@
+﻿@model JobViewModel
+
+<form asp-controller="Index" asp-action="AddJob" method="post" role="form">
+    <div class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-labelledby="addJob" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adding job</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="label-container">
+                            @Html.LabelFor(m => m.Job.Name)
+                        </div>
+
+                        @Html.EditorFor(m => m.Job.Name, new { htmlAttributes = new { @class = "form-control", id = "name", placeholder = "Enter job name" } })
+                        
+                        <div class="label-container">
+                            <small class="text-danger">
+                                @Html.ValidationMessageFor(m => m.Job.Name,"", new { htmlAttributes = new { @class = "text-danger error" } })
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <div class="label-container">
+                            @Html.LabelFor(m => m.Job.CategoryId)
+                        </div>
+                        
+                        <select asp-for="Job.CategoryId" asp-items="Model.CategoryMap" class="form-control"></select>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <div class="label-container">
+                            @Html.LabelFor(m => m.Job.DueDate)
+                        </div>
+
+                        @Html.EditorFor(m => m.Job.DueDate, new { htmlAttributes = new { @class = "form-control", id = "name", placeholder = "Enter job name" } })
+                        
+                        <div class="label-container">
+                            <small class="text-danger">
+                                @Html.ValidationMessageFor(m => m.Job.DueDate, "", new { htmlAttributes = new { @class = "text-danger" } })
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group check-container mt-3">
+                        @Html.EditorFor(m => m.Job.IsCompleted, new { htmlAttributes = new { @class = "zoom2" } })
+
+                        @Html.LabelFor(m => m.Job.IsCompleted)
+                    </div>
+                </div>
+
+                <div class="modal-footer d-center">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

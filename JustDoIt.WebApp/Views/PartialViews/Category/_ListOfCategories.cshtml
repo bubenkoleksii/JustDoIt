@@ -1,0 +1,36 @@
+﻿@model IEnumerable<CategoryResponse>?
+
+<div class="categories-list">
+    <div class="categories-list__item">
+        <h3 class="list-title category-name">Name</h3>
+        <h3 class="list-title category-count">Jobs</h3>
+        <h3 class="list-title category-actions">Actions</h3>
+    </div>
+
+    <hr/>
+
+    @if (Model != null && Model.Any())
+    {
+        @foreach (var category in Model)
+        {
+            <div class="categories-list__item">
+                <h3 class="list-item category-name">@category.Name</h3>
+                <h3 class="list-item category-count">@category.CountOfJobs</h3>
+
+                <div class="category-actions">
+                    <!--<button type="button" class="btn btn-primary btn-80">Choose</button>-->
+                    <button type="button" class="btn btn-warning btn-80">Change</button>
+                    <button type="button" class="btn btn-danger btn-80">Remove</button>
+                </div>
+            </div>
+
+            <hr/>
+        }
+    }
+    else
+    {
+        <div class="jobs-list__item">
+            <h3 class="list-item">There are no any categories</h3>
+        </div>
+    }
+</div>

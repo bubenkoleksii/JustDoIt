@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.WebApp", "JustDoIt.WebApp\JustDoIt.WebApp.csproj", "{C07CA464-236E-4098-87EE-F96CAB7333B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustDoIt.WebApp.Models", "JustDoIt.WebApp.Models\JustDoIt.WebApp.Models.csproj", "{B376311D-125C-420F-BA0F-68833ACB39FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustDoIt.WebApp.Models", "JustDoIt.WebApp.Models\JustDoIt.WebApp.Models.csproj", "{B376311D-125C-420F-BA0F-68833ACB39FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
