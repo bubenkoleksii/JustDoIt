@@ -85,17 +85,13 @@ body { background-color: var(--bg-color); }
     font-weight: 500;
 }
 
-h1, h2, h2, h4, h5, h6 {
-    color: var(--main-color)
-}
+h1, h2, h2, h4, h5, h6 { color: var(--main-color) }
 
 h2 { font-size: 22px; }
 
 button { width: 200px; }
 
-input {
-    font-size: 14px;
-}
+input { font-size: 14px; }
 
 label {
     font-size: 16px;
@@ -110,22 +106,20 @@ label {
 }
 
 .check-container {
-    display: flex;
-    justify-content: start;
     align-items: center;
+    display: flex;
     gap: 10px;
+    justify-content: start;
 }
 
 .d-row {
+    align-items: center;
     display: flex;
     flex-direction: row;
     justify-items: center;
-    align-items: center;
 }
 
-.marb {
-    margin-bottom: 5px;
-}
+.marb { margin-bottom: 5px; }
 
 .d-center {
     align-items: center;
@@ -133,19 +127,15 @@ label {
 }
 
 .label-container {
-    display: flex;
-    justify-content: start;
     align-items: start;
+    display: flex;
     font-size: 14px;
+    justify-content: start;
 }
 
-.fs-14 {
-    font-size: 14px;
-} 
+.fs-14 { font-size: 14px; }
 
-.zoom2 {
-    zoom: 2;
-}
+.zoom2 { zoom: 2; }
 
 .my-container {
     align-items: center;
@@ -170,6 +160,11 @@ label {
     gap: 100px;
     justify-content: space-between;
     padding: 20px;
+}
+
+.d-end {
+    display: flex;
+    justify-content: end;
 }
 
 .content-container__job-container {

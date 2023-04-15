@@ -3,7 +3,7 @@
 @{
     var categoryMap = Model.Categories!.ToDictionary(c => c.Id, c => c.Name);
 
-    var jobViewModel = new JobViewModel()
+    var jobViewModel = new JobViewModel
     {
         Job = new JobRequest(),
         CategoryMap = categoryMap.Select(c => new SelectListItem
@@ -19,8 +19,12 @@
 <div class="text-center">
     <h1 class="display-8">
         <span class="my-title">JustDoIt</span><span> Job Manager</span>
+
+        <form asp-controller="Index" asp-action="Index" class="d-end" method="get">
+            <button type="submit" class="btn btn-secondary">Reset all</button>
+        </form>
     </h1>
-    
+
     @if (!string.IsNullOrWhiteSpace(errorMessage))
     {
         <div class="alert alert-danger mt-lg-3">

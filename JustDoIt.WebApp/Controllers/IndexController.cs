@@ -170,7 +170,7 @@ public class IndexController : Controller
 
         if (!ModelState.IsValid)
         {
-            TempData["Error"] = "The job was not added. Reopen the modal window with the added job for details.";
+            TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
             return View(nameof(Index), indexViewModel);
         }
 
