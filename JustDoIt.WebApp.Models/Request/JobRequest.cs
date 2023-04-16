@@ -8,8 +8,7 @@ public class JobRequest
     [Display(Name = "Category")]
     public Guid CategoryId { get; set; }
 
-    [Required] [MaxLength(100)] 
-    public string Name { get; set; } = null!;
+    [Required] [MaxLength(100)] public string Name { get; set; } = null!;
 
     [Required]
     [Display(Name = "Due date")]

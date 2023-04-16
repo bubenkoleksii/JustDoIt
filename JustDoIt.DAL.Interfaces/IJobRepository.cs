@@ -4,5 +4,5 @@ namespace JustDoIt.DAL.Interfaces;
 
 public interface IJobRepository
 {
-    public Task<ICollection<JobEntityResponse>> GetAll(bool sortByStatus = true, bool sortByDueDate = true);
+    public Task<IEnumerable<JobEntityResponse>> GetAll(bool sortByStatus = true, bool sortByDueDate = true);
 }

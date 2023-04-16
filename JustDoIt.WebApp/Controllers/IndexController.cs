@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using AutoMapper;
+using JustDoIt.BLL.Interfaces;
 using JustDoIt.WebApp.Models.Request;
 using JustDoIt.WebApp.Models.Response;
 using JustDoIt.WebApp.ViewModels;
@@ -8,15 +10,20 @@ namespace JustDoIt.WebApp.Controllers;
 
 public class IndexController : Controller
 {
-    private readonly ILogger<IndexController> _logger;
+    private readonly IJobService _jobService;
 
-    public IndexController(ILogger<IndexController> logger)
+    private readonly IMapper _mapper;
+
+    public IndexController(IJobService jobService, IMapper mapper)
     {
-        _logger = logger;
+        _jobService = jobService;
+        _mapper = mapper;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var jobs = await _jobService.GetAll();
+
         var job1 = new JobResponse
         {
             Id = Guid.NewGuid(),
