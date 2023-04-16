@@ -15,11 +15,11 @@
     {
         @foreach (var job in Model)
         {
-            <div class="jobs-list__item">
-                <h3 class="list-item job-name">@job.Name</h3>
-                <h3 class="list-item job-category">@job.CategoryName</h3>
-                <h3 class="list-item job-date">@job.DueDate</h3>
-                <h3 class="list-item job-status">@job.IsCompleted</h3>
+            <div class="jobs-list__item @(job is { IsCompleted: false, DateDifferenceInMinutes: <= 60 * 3 } ? "block-danger" : "")">
+                <p class="list-item job-name">@job.Name</p>
+                <p class="list-item job-category">@job.CategoryName</p>
+                <p class="list-item job-date">@job.DueDate.ToString("MM/dd/yyyy hh:mm tt")</p>
+                <p class="list-item job-status">@(job.IsCompleted ? "Done" : "Not done")</p>
 
                 <div class="job-actions">
                     <button type="button" class="btn btn-warning btn-80">Change</button>

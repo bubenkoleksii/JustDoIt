@@ -1,16 +1,18 @@
 ﻿@model IndexViewModel
 
 @{
-    var categoryMap = Model.Categories!.ToDictionary(c => c.Id, c => c.Name);
+    var categoryMap = Model.Categories != null ? Model.Categories!.ToDictionary(c => c.Id, c => c.Name) : null;
 
     var jobViewModel = new JobViewModel
     {
         Job = new JobRequest(),
-        CategoryMap = categoryMap.Select(c => new SelectListItem
-        {
-            Value = c.Key.ToString(),
-            Text = c.Value
-        })
+        CategoryMap = categoryMap == null
+            ? null
+            : categoryMap!.Select(c => new SelectListItem
+            {
+                Value = c.Key.ToString(),
+                Text = c.Value
+            })
     };
 
     var errorMessage = TempData["Error"]?.ToString();
@@ -19,10 +21,6 @@
 <div class="text-center">
     <h1 class="display-8">
         <span class="my-title">JustDoIt</span><span> Job Manager</span>
-
-        <form asp-controller="Index" asp-action="Index" class="d-end" method="get">
-            <button type="submit" class="btn btn-secondary">Reset all</button>
-        </form>
     </h1>
 
     @if (!string.IsNullOrWhiteSpace(errorMessage))
@@ -33,6 +31,10 @@
             <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    
+    <form asp-controller="Index" asp-action="Index" class="d-end" method="get">
+        <button type="submit" class="btn btn-secondary">Reset all</button>
+    </form>
 
     <div class="content-container display-2">
         <div class="content-container__job-container">
@@ -57,8 +59,10 @@
         <div class="content-container__categories-container">
             <div class="content-container__categories-container__title">
                 <h2 class="my-second-title">Categories</h2>
-                <button type="button" class="btn btn-success">Add Category</button>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategory">Add Category</button>
             </div>
+            
+            @await Html.PartialAsync("~/Views/PartialViews/Category/_AddCategory.cshtml", new CategoryRequest())
 
             @await Html.PartialAsync("~/Views/PartialViews/Category/_ListOfCategories.cshtml", Model.Categories)
         </div>

@@ -12,5 +12,8 @@ public class WebAppMappingProfile : Profile
     {
         CreateMap<JobModelResponse, JobResponse>();
         CreateMap<JobRequest, JobModelRequest>();
+
+        CreateMap<CategoryModelResponse, CategoryResponse>();
+        CreateMap<CategoryRequest, CategoryModelRequest>();
     }
 }

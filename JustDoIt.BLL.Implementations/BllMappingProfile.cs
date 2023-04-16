@@ -12,5 +12,8 @@ public class BllMappingProfile : Profile
     {
         CreateMap<JobEntityResponse, JobModelResponse>();
         CreateMap<JobModelRequest, JobEntityRequest>();
+
+        CreateMap<CategoryEntityResponse, CategoryModelResponse>();
+        CreateMap<CategoryModelRequest, CategoryEntityRequest>();
     }
 }

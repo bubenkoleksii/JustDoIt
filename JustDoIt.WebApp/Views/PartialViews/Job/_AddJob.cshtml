@@ -1,7 +1,7 @@
 ﻿@model JobViewModel
 
 <form asp-controller="Index" asp-action="AddJob" method="post" role="form">
-    <div class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-labelledby="addJob" aria-hidden="true">
+    <div class="modal fade" id="addJob" tabindex="-1" role="dialog" aria-labelledby="addCategory" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -28,7 +28,10 @@
                             @Html.LabelFor(m => m.Job.CategoryId)
                         </div>
 
-                        <select asp-for="Job.CategoryId" asp-items="Model.CategoryMap" class="form-control"></select>
+                        @if (Model.CategoryMap != null)
+                        {
+                            <select asp-for="Job.CategoryId" asp-items="Model.CategoryMap" class="form-control"></select>
+                        }
                     </div>
 
                     <div class="form-group mt-3">

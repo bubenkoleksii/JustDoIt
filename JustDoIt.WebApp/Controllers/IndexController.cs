@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using AutoMapper;
 using JustDoIt.BLL.Interfaces;
+using JustDoIt.BLL.Models.Request;
 using JustDoIt.WebApp.Models.Request;
 using JustDoIt.WebApp.Models.Response;
 using JustDoIt.WebApp.ViewModels;
@@ -12,176 +13,95 @@ public class IndexController : Controller
 {
     private readonly IJobService _jobService;
 
+    private readonly ICategoryService _categoryService;
+
     private readonly IMapper _mapper;
 
-    public IndexController(IJobService jobService, IMapper mapper)
+    public IndexController(IJobService jobService, ICategoryService categoryService, IMapper mapper)
     {
         _jobService = jobService;
+        _categoryService = categoryService;
         _mapper = mapper;
     }
 
     public async Task<IActionResult> Index()
     {
-        var jobs = await _jobService.GetAll();
-
-        var job1 = new JobResponse
+        try
         {
-            Id = Guid.NewGuid(),
-            Name = "Change life",
-            CategoryName = "Family",
-            DueDate = new DateTime(),
-            IsCompleted = false
-        };
-
-        var job2 = new JobResponse
+            var indexViewModel = await GetCategoriesAndJobs();
+            return View(indexViewModel);
+        }
+        catch
         {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
-
-        var job3 = new JobResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
-
-        var job4 = new JobResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
-
-        var job5 = new JobResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
-
-        var jobsList = new List<JobResponse>
-        {
-            job1,
-            job2,
-            job3,
-            job4,
-            job5
-        };
-
-        var category1 = new CategoryResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Family",
-            CountOfJobs = 5
-        };
-
-        var categories = new List<CategoryResponse>
-        {
-            category1
-        };
-
-        var indexViewModel = new IndexViewModel
-        {
-            Jobs = jobsList,
-            Categories = categories
-        };
-
-        return View(indexViewModel);
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddJob(JobRequest job)
     {
-        var job1 = new JobResponse
+        try
         {
-            Id = Guid.NewGuid(),
-            Name = "Change life",
-            CategoryName = "Family",
-            DueDate = new DateTime(),
-            IsCompleted = false
-        };
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
 
-        var job2 = new JobResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
+                var indexViewModel = await GetCategoriesAndJobs();
+                return View(nameof(Index), indexViewModel);
+            }
 
-        var job3 = new JobResponse
-        {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
+            var jobModelRequest = _mapper.Map<JobModelRequest>(job);
+            await _jobService.Add(jobModelRequest);
 
-        var job4 = new JobResponse
+            return RedirectToAction(nameof(Index));
+        }
+        catch
         {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
 
-        var job5 = new JobResponse
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> AddCategory(CategoryRequest category)
+    {
+        try
         {
-            Id = Guid.NewGuid(),
-            Name = "Play football",
-            CategoryName = "Work",
-            DueDate = new DateTime(),
-            IsCompleted = true
-        };
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "The category was not added. Reopen the modal window with the adding category for details.";
 
-        var jobsList = new List<JobResponse>
-        {
-            job1,
-            job2,
-            job3,
-            job4,
-            job5
-        };
+                var indexViewModel = await GetCategoriesAndJobs();
+                return View(nameof(Index), indexViewModel);
+            }
 
-        var category1 = new CategoryResponse
+            var categoryRequest = _mapper.Map<CategoryModelRequest>(category);
+            await _categoryService.Add(categoryRequest);
+            
+            return RedirectToAction(nameof(Index));
+        }
+        catch
         {
-            Id = Guid.NewGuid(),
-            Name = "Family",
-            CountOfJobs = 5
-        };
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
 
-        var categories = new List<CategoryResponse>
-        {
-            category1
-        };
+    private async Task<IndexViewModel> GetCategoriesAndJobs()
+    {
+        var jobs = await _jobService.GetAll();
+        var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
+
+        var categories = await _categoryService.GetAll();
+        var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
         var indexViewModel = new IndexViewModel
         {
-            Jobs = jobsList,
-            Categories = categories
+            Jobs = jobsResponse,
+            Categories = categoriesResponse
         };
 
-        if (!ModelState.IsValid)
-        {
-            TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
-            return View(nameof(Index), indexViewModel);
-        }
-
-        return RedirectToAction(nameof(Index));
+        return indexViewModel;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

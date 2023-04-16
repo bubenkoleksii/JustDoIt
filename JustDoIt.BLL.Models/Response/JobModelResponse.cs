@@ -11,4 +11,6 @@ public class JobModelResponse
     public DateTime DueDate { get; set; }
 
     public bool IsCompleted { get; set; }
+
+    public int DateDifferenceInMinutes { get; set; }
 }

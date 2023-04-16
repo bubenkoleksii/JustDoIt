@@ -5,6 +5,6 @@ namespace JustDoIt.WebApp.ViewModels;
 
 public class JobViewModel
 {
-    public IEnumerable<SelectListItem> CategoryMap = null!;
+    public IEnumerable<SelectListItem>? CategoryMap = null!;
     public JobRequest Job { get; set; } = null!;
 }
