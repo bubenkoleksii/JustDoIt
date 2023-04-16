@@ -30,6 +30,11 @@ public class CategoryService : ICategoryService
     public async Task Add(CategoryModelRequest category)
     {
         var categoryRequest = _mapper.Map<CategoryEntityRequest>(category);
+
+        var existingCategory = await _categoryRepository.GetOneByName(categoryRequest.Name);
+        if (existingCategory != null)
+            throw new ArgumentException();
+
         await _categoryRepository.Add(categoryRequest);
     }
 }

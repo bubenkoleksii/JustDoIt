@@ -31,7 +31,7 @@
             <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
-    
+
     <form asp-controller="Index" asp-action="Index" class="d-end" method="get">
         <button type="submit" class="btn btn-secondary">Reset all</button>
     </form>
@@ -61,7 +61,7 @@
                 <h2 class="my-second-title">Categories</h2>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategory">Add Category</button>
             </div>
-            
+
             @await Html.PartialAsync("~/Views/PartialViews/Category/_AddCategory.cshtml", new CategoryRequest())
 
             @await Html.PartialAsync("~/Views/PartialViews/Category/_ListOfCategories.cshtml", Model.Categories)

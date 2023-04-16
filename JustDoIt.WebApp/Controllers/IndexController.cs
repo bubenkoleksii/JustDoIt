@@ -11,9 +11,8 @@ namespace JustDoIt.WebApp.Controllers;
 
 public class IndexController : Controller
 {
-    private readonly IJobService _jobService;
-
     private readonly ICategoryService _categoryService;
+    private readonly IJobService _jobService;
 
     private readonly IMapper _mapper;
 
@@ -70,7 +69,8 @@ public class IndexController : Controller
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "The category was not added. Reopen the modal window with the adding category for details.";
+                TempData["Error"] =
+                    "The category was not added. Reopen the modal window with the adding category for details.";
 
                 var indexViewModel = await GetCategoriesAndJobs();
                 return View(nameof(Index), indexViewModel);
@@ -78,8 +78,16 @@ public class IndexController : Controller
 
             var categoryRequest = _mapper.Map<CategoryModelRequest>(category);
             await _categoryService.Add(categoryRequest);
-            
+
             return RedirectToAction(nameof(Index));
+        }
+        catch (ArgumentException)
+        {
+            TempData["Error"] =
+                "The category was not added because a category with that name already exists.";
+
+            var indexViewModel = await GetCategoriesAndJobs();
+            return View(nameof(Index), indexViewModel);
         }
         catch
         {

@@ -27,6 +27,16 @@ public class CategoryRepository : ICategoryRepository
         return categories;
     }
 
+    public async Task<CategoryEntityResponse> GetOneByName(string name)
+    {
+        var queryString = $"SELECT * FROM Category WHERE [Name] = @{nameof(name)}";
+        
+        using var connection = _context.CreateConnection();
+        var category = await connection.QueryFirstOrDefaultAsync<CategoryEntityResponse>(queryString, new { name });
+
+        return category;
+    }
+
     public async Task Add(CategoryEntityRequest category)
     {
         var queryString = $"INSERT INTO Category ([Name]) VALUES(@{nameof(category.Name)})";
