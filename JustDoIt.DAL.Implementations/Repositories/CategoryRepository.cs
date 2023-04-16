@@ -26,6 +26,7 @@ public class CategoryRepository : ICategoryRepository
 
         return categories;
     }
+
     public async Task<CategoryEntityResponse> GetOneById(Guid id)
     {
         var queryString = $"SELECT * FROM Category WHERE Id = @{nameof(id)}";
@@ -39,7 +40,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task<CategoryEntityResponse> GetOneByName(string name)
     {
         var queryString = $"SELECT * FROM Category WHERE [Name] = @{nameof(name)}";
-        
+
         using var connection = _context.CreateConnection();
         var category = await connection.QueryFirstOrDefaultAsync<CategoryEntityResponse>(queryString, new { name });
 

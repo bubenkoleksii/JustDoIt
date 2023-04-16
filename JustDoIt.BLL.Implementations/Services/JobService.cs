@@ -9,9 +9,8 @@ namespace JustDoIt.BLL.Implementations.Services;
 
 public class JobService : IJobService
 {
-    private readonly IJobRepository _jobRepository;
-
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IJobRepository _jobRepository;
 
     private readonly IMapper _mapper;
 
@@ -51,27 +50,17 @@ public class JobService : IJobService
     public async Task Remove(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob != null)
-        {
-            await _jobRepository.Remove(id);
-        }
+        if (existingJob != null) await _jobRepository.Remove(id);
     }
 
     public async Task Check(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob == null)
-        {
-            throw new ArgumentNullException();
-        }
+        if (existingJob == null) throw new ArgumentNullException();
 
         if (existingJob.IsCompleted)
-        {
             await _jobRepository.Uncheck(id);
-        }
         else
-        {
             await _jobRepository.Check(id);
-        }
     }
 }

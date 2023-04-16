@@ -41,9 +41,6 @@ public class CategoryService : ICategoryService
     public async Task Remove(Guid id)
     {
         var existingCategory = _categoryRepository.GetOneById(id);
-        if (existingCategory != null)
-        {
-            await _categoryRepository.Remove(id);
-        }
+        if (existingCategory != null) await _categoryRepository.Remove(id);
     }
 }

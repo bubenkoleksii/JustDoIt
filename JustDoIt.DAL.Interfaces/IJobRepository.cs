@@ -16,6 +16,6 @@ public interface IJobRepository
     public Task Remove(Guid id);
 
     public Task Check(Guid id);
-    
+
     public Task Uncheck(Guid id);
 }
