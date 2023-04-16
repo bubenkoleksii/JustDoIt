@@ -7,6 +7,8 @@ public interface IJobRepository
 {
     public Task<IEnumerable<JobEntityResponse>> GetAll(bool sortByDueDate = true);
 
+    public Task<IEnumerable<JobEntityResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true);
+
     public Task<JobEntityResponse> GetOneById(Guid id);
 
     public Task Add(JobEntityRequest job);

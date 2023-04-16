@@ -11,17 +11,32 @@ public class JobService : IJobService
 {
     private readonly IJobRepository _jobRepository;
 
+    private readonly ICategoryRepository _categoryRepository;
+
     private readonly IMapper _mapper;
 
-    public JobService(IJobRepository jobRepository, IMapper mapper)
+    public JobService(IJobRepository jobRepository, ICategoryRepository categoryRepository, IMapper mapper)
     {
         _jobRepository = jobRepository;
+        _categoryRepository = categoryRepository;
         _mapper = mapper;
     }
 
     public async Task<ICollection<JobModelResponse>> GetAll(bool sortByDueDate = true)
     {
         var jobs = await _jobRepository.GetAll();
+
+        var jobsResponse = _mapper.Map<IEnumerable<JobModelResponse>>(jobs);
+        return jobsResponse.ToList();
+    }
+
+    public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true)
+    {
+        var existingCategory = await _categoryRepository.GetOneById(categoryId);
+        if (existingCategory == null)
+            throw new ArgumentNullException();
+
+        var jobs = await _jobRepository.GetByCategory(categoryId);
 
         var jobsResponse = _mapper.Map<IEnumerable<JobModelResponse>>(jobs);
         return jobsResponse.ToList();

@@ -7,6 +7,8 @@ public interface IJobService
 {
     public Task<ICollection<JobModelResponse>> GetAll(bool sortByDueDate = true);
 
+    public Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true);
+
     public Task Add(JobModelRequest job);
 
     public Task Remove(Guid id);

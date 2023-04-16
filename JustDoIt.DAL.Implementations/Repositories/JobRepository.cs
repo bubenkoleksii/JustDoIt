@@ -29,6 +29,22 @@ public class JobRepository : IJobRepository
         return jobs;
     }
 
+    public async Task<IEnumerable<JobEntityResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true)
+    {
+        var queryString =
+            "SELECT Job.Id, Job.[Name], Category.[Name] AS CategoryName, Job.IsCompleted, Job.DueDate, " +
+            " ABS(DATEDIFF(MINUTE, GETDATE(), Job.DueDate)) AS DateDifferenceInMinutes " +
+            "FROM Job INNER JOIN Category ON Category.Id = Job.CategoryId " +
+            $"WHERE CategoryId = @{nameof(categoryId)} ";
+
+        queryString += sortByDueDate ? "ORDER BY Job.IsCompleted, DateDifferenceInMinutes" : "ORDER BY Job.IsCompleted";
+
+        using var connection = _context.CreateConnection();
+        var jobs = await connection.QueryAsync<JobEntityResponse>(queryString, new { categoryId });
+
+        return jobs;
+    }
+
     public async Task<JobEntityResponse> GetOneById(Guid id)
     {
         var queryString = $"SELECT * FROM Job WHERE Id = @{nameof(id)}";

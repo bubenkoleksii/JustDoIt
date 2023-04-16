@@ -18,8 +18,8 @@
                 <h3 class="list-item category-count">@category.CountOfJobs</h3>
 
                 <div class="category-actions">
-                    <form asp-action="RemoveJob" asp-controller="Index" asp-route-id="@category.Id" method="post" role="form">
-                        <button type="submit" class="btn btn-danger btn-80">Choose</button>
+                    <form asp-action="GetJobsByCategory" asp-controller="Index" asp-route-id="@category.Id" method="get" role="form">
+                        <button type="submit" class="btn btn-primary btn-80">Choose</button>
                     </form>
 
                     <form asp-action="RemoveCategory" asp-controller="Index" asp-route-id="@category.Id" method="post" role="form">

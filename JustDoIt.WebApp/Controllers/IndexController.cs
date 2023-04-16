@@ -12,6 +12,7 @@ namespace JustDoIt.WebApp.Controllers;
 public class IndexController : Controller
 {
     private readonly ICategoryService _categoryService;
+
     private readonly IJobService _jobService;
 
     private readonly IMapper _mapper;
@@ -28,8 +29,40 @@ public class IndexController : Controller
     {
         try
         {
-            var indexViewModel = await GetCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs();
             return View(indexViewModel);
+        }
+        catch
+        {
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetJobsByCategory(Guid id)
+    {
+        try
+        {
+            var jobs = await _jobService.GetByCategory(id);
+            var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
+
+            var categories = await _categoryService.GetAll();
+            var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
+
+            var indexViewModel = new IndexViewModel
+            {
+                Jobs = jobsResponse,
+                Categories = categoriesResponse
+            };
+
+            return View(nameof(Index), indexViewModel);
+        }
+        catch (ArgumentNullException)
+        {
+            TempData["Error"] = "The jobs was not selected because category not found.";
+
+            var indexViewModel = await GetAllCategoriesAndJobs();
+            return View(nameof(Index), indexViewModel);
         }
         catch
         {
@@ -47,7 +80,7 @@ public class IndexController : Controller
             {
                 TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
 
-                var indexViewModel = await GetCategoriesAndJobs();
+                var indexViewModel = await GetAllCategoriesAndJobs();
                 return View(nameof(Index), indexViewModel);
             }
 
@@ -88,6 +121,13 @@ public class IndexController : Controller
 
             return RedirectToAction(nameof(Index));
         }
+        catch (ArgumentNullException)
+        {
+            TempData["Error"] = "The job was not found and its status cannot be changed.";
+
+            var indexViewModel = await GetAllCategoriesAndJobs();
+            return View(nameof(Index), indexViewModel);
+        }
         catch
         {
             return View("~/Views/Shared/InternalError.cshtml");
@@ -105,7 +145,7 @@ public class IndexController : Controller
                 TempData["Error"] =
                     "The category was not added. Reopen the modal window with the adding category for details.";
 
-                var indexViewModel = await GetCategoriesAndJobs();
+                var indexViewModel = await GetAllCategoriesAndJobs();
                 return View(nameof(Index), indexViewModel);
             }
 
@@ -119,7 +159,7 @@ public class IndexController : Controller
             TempData["Error"] =
                 "The category was not added because a category with that name already exists.";
 
-            var indexViewModel = await GetCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs();
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -144,7 +184,7 @@ public class IndexController : Controller
         }
     }
 
-    private async Task<IndexViewModel> GetCategoriesAndJobs()
+    private async Task<IndexViewModel> GetAllCategoriesAndJobs()
     {
         var jobs = await _jobService.GetAll();
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
