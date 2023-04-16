@@ -26,6 +26,15 @@ public class CategoryRepository : ICategoryRepository
 
         return categories;
     }
+    public async Task<CategoryEntityResponse> GetOneById(Guid id)
+    {
+        var queryString = $"SELECT * FROM Category WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        var category = await connection.QueryFirstOrDefaultAsync<CategoryEntityResponse>(queryString, new { id });
+
+        return category;
+    }
 
     public async Task<CategoryEntityResponse> GetOneByName(string name)
     {
@@ -43,5 +52,13 @@ public class CategoryRepository : ICategoryRepository
 
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(queryString, category);
+    }
+
+    public async Task Remove(Guid id)
+    {
+        var queryString = $"DELETE FROM Category WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(queryString, new { id });
     }
 }

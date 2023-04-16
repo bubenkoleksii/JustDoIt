@@ -8,4 +8,6 @@ public interface ICategoryService
     public Task<ICollection<CategoryModelResponse>> GetAll();
 
     public Task Add(CategoryModelRequest category);
+
+    public Task Remove(Guid id);
 }

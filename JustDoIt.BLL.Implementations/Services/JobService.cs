@@ -32,4 +32,31 @@ public class JobService : IJobService
         var jobRequest = _mapper.Map<JobEntityRequest>(job);
         await _jobRepository.Add(jobRequest);
     }
+
+    public async Task Remove(Guid id)
+    {
+        var existingJob = await _jobRepository.GetOneById(id);
+        if (existingJob != null)
+        {
+            await _jobRepository.Remove(id);
+        }
+    }
+
+    public async Task Check(Guid id)
+    {
+        var existingJob = await _jobRepository.GetOneById(id);
+        if (existingJob == null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        if (existingJob.IsCompleted)
+        {
+            await _jobRepository.Uncheck(id);
+        }
+        else
+        {
+            await _jobRepository.Check(id);
+        }
+    }
 }

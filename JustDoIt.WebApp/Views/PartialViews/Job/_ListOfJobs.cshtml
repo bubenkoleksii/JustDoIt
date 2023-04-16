@@ -22,8 +22,20 @@
                 <p class="list-item job-status">@(job.IsCompleted ? "Done" : "Not done")</p>
 
                 <div class="job-actions">
-                    <button type="button" class="btn btn-warning btn-80">Change</button>
-                    <button type="button" class="btn btn-danger btn-80">Remove</button>
+                    <form asp-action="CheckJob" asp-controller="Index" asp-route-id="@job.Id" method="post" role="form">
+                        @if (!job.IsCompleted)
+                        {
+                            <button type="submit" class="btn btn-primary btn-80">Check</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-secondary btn-80">Uncheck</button>
+                        }
+                    </form>
+
+                    <form asp-action="RemoveJob" asp-controller="Index" asp-route-id="@job.Id" method="post" role="form">
+                        <button type="submit" class="btn btn-danger btn-80">Remove</button>
+                    </form>
                 </div>
             </div>
 

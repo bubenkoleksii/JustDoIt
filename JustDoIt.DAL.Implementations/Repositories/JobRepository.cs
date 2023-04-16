@@ -29,6 +29,16 @@ public class JobRepository : IJobRepository
         return jobs;
     }
 
+    public async Task<JobEntityResponse> GetOneById(Guid id)
+    {
+        var queryString = $"SELECT * FROM Job WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        var job = await connection.QueryFirstOrDefaultAsync<JobEntityResponse>(queryString, new { id });
+
+        return job;
+    }
+
     public async Task Add(JobEntityRequest job)
     {
         var queryString =
@@ -37,5 +47,29 @@ public class JobRepository : IJobRepository
 
         using var connection = _context.CreateConnection();
         await connection.ExecuteAsync(queryString, job);
+    }
+
+    public async Task Remove(Guid id)
+    {
+        var queryString = $"DELETE FROM Job WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(queryString, new { id });
+    }
+
+    public async Task Check(Guid id)
+    {
+        var queryString = $"UPDATE Job SET IsCompleted = 1 WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(queryString, new { id });
+    }
+
+    public async Task Uncheck(Guid id)
+    {
+        var queryString = $"UPDATE Job SET IsCompleted = 0 WHERE Id = @{nameof(id)}";
+
+        using var connection = _context.CreateConnection();
+        await connection.ExecuteAsync(queryString, new { id });
     }
 }

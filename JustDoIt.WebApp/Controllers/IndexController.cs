@@ -23,6 +23,7 @@ public class IndexController : Controller
         _mapper = mapper;
     }
 
+    [HttpGet]
     public async Task<IActionResult> Index()
     {
         try
@@ -63,6 +64,38 @@ public class IndexController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveJob(Guid id)
+    {
+        try
+        {
+            await _jobService.Remove(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CheckJob(Guid id)
+    {
+        try
+        {
+            await _jobService.Check(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddCategory(CategoryRequest category)
     {
         try
@@ -88,6 +121,22 @@ public class IndexController : Controller
 
             var indexViewModel = await GetCategoriesAndJobs();
             return View(nameof(Index), indexViewModel);
+        }
+        catch
+        {
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RemoveCategory(Guid id)
+    {
+        try
+        {
+            await _categoryService.Remove(id);
+
+            return RedirectToAction(nameof(Index));
         }
         catch
         {
