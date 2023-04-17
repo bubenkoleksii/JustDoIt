@@ -33,7 +33,7 @@ public class CategoryService : ICategoryService
 
         var existingCategory = await _categoryRepository.GetOneByName(categoryRequest.Name);
         if (existingCategory != null)
-            throw new ArgumentException();
+            throw new ArgumentException("The category was not added because a category with that name already exists.");
 
         await _categoryRepository.Add(categoryRequest);
     }

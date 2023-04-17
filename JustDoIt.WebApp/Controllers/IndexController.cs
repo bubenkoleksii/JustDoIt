@@ -57,9 +57,9 @@ public class IndexController : Controller
 
             return View(nameof(Index), indexViewModel);
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException exception)
         {
-            TempData["Error"] = "The jobs was not selected because category not found.";
+            TempData["Error"] = exception.Message;
 
             var indexViewModel = await GetAllCategoriesAndJobs();
             return View(nameof(Index), indexViewModel);
@@ -121,9 +121,9 @@ public class IndexController : Controller
 
             return RedirectToAction(nameof(Index));
         }
-        catch (ArgumentNullException)
+        catch (ArgumentNullException exception)
         {
-            TempData["Error"] = "The job was not found and its status cannot be changed.";
+            TempData["Error"] = exception.Message;
 
             var indexViewModel = await GetAllCategoriesAndJobs();
             return View(nameof(Index), indexViewModel);
@@ -154,10 +154,9 @@ public class IndexController : Controller
 
             return RedirectToAction(nameof(Index));
         }
-        catch (ArgumentException)
+        catch (ArgumentException exception)
         {
-            TempData["Error"] =
-                "The category was not added because a category with that name already exists.";
+            TempData["Error"] = exception.Message;
 
             var indexViewModel = await GetAllCategoriesAndJobs();
             return View(nameof(Index), indexViewModel);

@@ -33,7 +33,7 @@ public class JobService : IJobService
     {
         var existingCategory = await _categoryRepository.GetOneById(categoryId);
         if (existingCategory == null)
-            throw new ArgumentNullException();
+            throw new ArgumentNullException("The jobs was not selected because category not found.");
 
         var jobs = await _jobRepository.GetByCategory(categoryId);
 
@@ -56,7 +56,7 @@ public class JobService : IJobService
     public async Task Check(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob == null) throw new ArgumentNullException();
+        if (existingJob == null) throw new ArgumentNullException("The job was not found and its status cannot be changed.");
 
         if (existingJob.IsCompleted)
             await _jobRepository.Uncheck(id);
