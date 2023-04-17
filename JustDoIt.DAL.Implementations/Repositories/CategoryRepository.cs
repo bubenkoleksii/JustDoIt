@@ -7,11 +7,11 @@ namespace JustDoIt.DAL.Implementations.Repositories;
 
 public class CategoryRepository : ICategoryRepository
 {
-    private readonly DbContext _context;
+    private readonly DbFactory _factory;
 
-    public CategoryRepository(DbContext context)
+    public CategoryRepository(DbFactory factory)
     {
-        _context = context;
+        _factory = factory;
     }
 
     public async Task<IEnumerable<CategoryEntityResponse>> GetAll()
@@ -21,7 +21,7 @@ public class CategoryRepository : ICategoryRepository
                           "GROUP BY Category.Id, Category.[Name] " +
                           "ORDER BY CountOfJobs DESC";
 
-        using var connection = _context.CreateConnection();
+        using var connection = _factory.CreateConnection();
         var categories = await connection.QueryAsync<CategoryEntityResponse>(queryString);
 
         return categories;
@@ -31,7 +31,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var queryString = $"SELECT * FROM Category WHERE Id = @{nameof(id)}";
 
-        using var connection = _context.CreateConnection();
+        using var connection = _factory.CreateConnection();
         var category = await connection.QueryFirstOrDefaultAsync<CategoryEntityResponse>(queryString, new { id });
 
         return category;
@@ -41,7 +41,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var queryString = $"SELECT * FROM Category WHERE [Name] = @{nameof(name)}";
 
-        using var connection = _context.CreateConnection();
+        using var connection = _factory.CreateConnection();
         var category = await connection.QueryFirstOrDefaultAsync<CategoryEntityResponse>(queryString, new { name });
 
         return category;
@@ -51,7 +51,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var queryString = $"INSERT INTO Category ([Name]) VALUES(@{nameof(category.Name)})";
 
-        using var connection = _context.CreateConnection();
+        using var connection = _factory.CreateConnection();
         await connection.ExecuteAsync(queryString, category);
     }
 
@@ -59,7 +59,7 @@ public class CategoryRepository : ICategoryRepository
     {
         var queryString = $"DELETE FROM Category WHERE Id = @{nameof(id)}";
 
-        using var connection = _context.CreateConnection();
+        using var connection = _factory.CreateConnection();
         await connection.ExecuteAsync(queryString, new { id });
     }
 }

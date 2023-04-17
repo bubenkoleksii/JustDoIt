@@ -10,6 +10,7 @@ namespace JustDoIt.BLL.Implementations.Services;
 public class JobService : IJobService
 {
     private readonly ICategoryRepository _categoryRepository;
+
     private readonly IJobRepository _jobRepository;
 
     private readonly IMapper _mapper;

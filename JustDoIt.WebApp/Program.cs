@@ -11,7 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // DI
-builder.Services.AddSingleton<DbContext>();
+builder.Services.AddSingleton<DbFactory>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
