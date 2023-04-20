@@ -57,7 +57,8 @@ public class JobService : IJobService
     public async Task Check(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob == null) throw new ArgumentNullException("The job was not found and its status cannot be changed.");
+        if (existingJob == null) 
+            throw new ArgumentNullException("The job was not found and its status cannot be changed.");
 
         if (existingJob.IsCompleted)
             await _jobRepository.Uncheck(id);

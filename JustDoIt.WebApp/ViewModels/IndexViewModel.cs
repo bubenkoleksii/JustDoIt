@@ -7,4 +7,6 @@ public class IndexViewModel
     public ICollection<JobResponse>? Jobs { get; set; }
 
     public ICollection<CategoryResponse>? Categories { get; set; }
+
+    public bool IsSingleCategoryView { get; set; } = false;
 }

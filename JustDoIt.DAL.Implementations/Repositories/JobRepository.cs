@@ -17,7 +17,7 @@ public class JobRepository : IJobRepository
     public async Task<IEnumerable<JobEntityResponse>> GetAll(bool sortByDueDate = true)
     {
         var queryString =
-            "SELECT Job.Id, Job.[Name], Category.[Name] AS CategoryName, Job.IsCompleted, Job.DueDate, " +
+            "SELECT Job.Id, Job.[Name], Category.[Name] AS CategoryName, Category.Id AS CategoryId, Job.IsCompleted, Job.DueDate, " +
             " ABS(DATEDIFF(MINUTE, GETDATE(), Job.DueDate)) AS DateDifferenceInMinutes " +
             "FROM Job INNER JOIN Category ON Category.Id = Job.CategoryId ";
 
@@ -32,7 +32,7 @@ public class JobRepository : IJobRepository
     public async Task<IEnumerable<JobEntityResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true)
     {
         var queryString =
-            "SELECT Job.Id, Job.[Name], Category.[Name] AS CategoryName, Job.IsCompleted, Job.DueDate, " +
+            "SELECT Job.Id, Job.[Name], Category.[Name] AS CategoryName, Category.Id AS CategoryId, Job.IsCompleted, Job.DueDate, " +
             " ABS(DATEDIFF(MINUTE, GETDATE(), Job.DueDate)) AS DateDifferenceInMinutes " +
             "FROM Job INNER JOIN Category ON Category.Id = Job.CategoryId " +
             $"WHERE CategoryId = @{nameof(categoryId)} ";

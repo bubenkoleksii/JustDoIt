@@ -3,7 +3,7 @@
 @{
     var categoryMap = Model.Categories != null ? Model.Categories!.ToDictionary(c => c.Id, c => c.Name) : null;
 
-    var jobViewModel = new JobViewModel
+    var jobViewModelRequest = new JobViewModelRequest
     {
         Job = new JobRequest(),
         CategoryMap = categoryMap == null
@@ -13,6 +13,12 @@
                 Value = c.Key.ToString(),
                 Text = c.Value
             })
+    };
+
+    var jobViewModelResponse = new JobViewModelResponse
+    {
+        IsSingleCategoryView = Model.IsSingleCategoryView,
+        Jobs = Model.Jobs
     };
 
     var errorMessage = TempData["Error"]?.ToString();
@@ -51,9 +57,9 @@
                 }
             </div>
 
-            @await Html.PartialAsync("~/Views/PartialViews/Job/_AddJob.cshtml", jobViewModel)
+            @await Html.PartialAsync("~/Views/PartialViews/Job/_AddJob.cshtml", jobViewModelRequest)
 
-            @await Html.PartialAsync("~/Views/PartialViews/Job/_ListOfJobs.cshtml", Model.Jobs)
+            @await Html.PartialAsync("~/Views/PartialViews/Job/_ListOfJobs.cshtml", jobViewModelResponse)
         </div>
 
         <div class="content-container__categories-container">

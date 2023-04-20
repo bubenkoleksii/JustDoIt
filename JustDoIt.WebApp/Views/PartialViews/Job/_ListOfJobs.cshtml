@@ -1,4 +1,4 @@
-﻿@model IEnumerable<JobResponse>?
+﻿@model JobViewModelResponse
 
 <div class="jobs-list">
     <div class="jobs-list__item">
@@ -11,9 +11,9 @@
 
     <hr/>
 
-    @if (Model != null && Model.Any())
+    @if (Model.Jobs != null && Model.Jobs.Any())
     {
-        @foreach (var job in Model)
+        @foreach (var job in Model.Jobs)
         {
             <div class="jobs-list__item @(job is { IsCompleted: false, DateDifferenceInMinutes: <= 60 * 3 } ? "block-danger" : "")">
                 <p class="list-item job-name">@job.Name</p>
@@ -22,7 +22,7 @@
                 <p class="list-item job-status">@(job.IsCompleted ? "Done" : "Not done")</p>
 
                 <div class="job-actions">
-                    <form asp-action="CheckJob" asp-controller="Index" asp-route-id="@job.Id" method="post" role="form">
+                    <form asp-action="CheckJob" asp-controller="Index" asp-route-id="@job.Id" asp-route-categoryId="@job.CategoryId" asp-route-isSingleCategoryView="@Model.IsSingleCategoryView" method="post" role="form">
                         @if (!job.IsCompleted)
                         {
                             <button type="submit" class="btn btn-primary btn-80">Check</button>
@@ -33,7 +33,7 @@
                         }
                     </form>
 
-                    <form asp-action="RemoveJob" asp-controller="Index" asp-route-id="@job.Id" method="post" role="form">
+                    <form asp-action="RemoveJob" asp-controller="Index" asp-route-id="@job.Id" asp-route-categoryId="@job.CategoryId" asp-route-isSingleCategoryView="@Model.IsSingleCategoryView" method="post" role="form">
                         <button type="submit" class="btn btn-danger btn-80">Remove</button>
                     </form>
                 </div>

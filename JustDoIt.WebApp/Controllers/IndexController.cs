@@ -43,18 +43,7 @@ public class IndexController : Controller
     {
         try
         {
-            var jobs = await _jobService.GetByCategory(id);
-            var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
-
-            var categories = await _categoryService.GetAll();
-            var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
-
-            var indexViewModel = new IndexViewModel
-            {
-                Jobs = jobsResponse,
-                Categories = categoriesResponse
-            };
-
+            var indexViewModel = await GetCategoriesAndJobsByCategory(id);
             return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
@@ -97,13 +86,19 @@ public class IndexController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> RemoveJob(Guid id)
+    public async Task<IActionResult> RemoveJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
         try
         {
             await _jobService.Remove(id);
 
-            return RedirectToAction(nameof(Index));
+            if (!isSingleCategoryView)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
+            return View(nameof(Index), indexViewModel);
         }
         catch
         {
@@ -113,13 +108,19 @@ public class IndexController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CheckJob(Guid id)
+    public async Task<IActionResult> CheckJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
         try
         {
             await _jobService.Check(id);
 
-            return RedirectToAction(nameof(Index));
+            if (!isSingleCategoryView)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
+            return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
         {
@@ -195,6 +196,24 @@ public class IndexController : Controller
         {
             Jobs = jobsResponse,
             Categories = categoriesResponse
+        };
+
+        return indexViewModel;
+    }
+
+    private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId)
+    {
+        var jobs = await _jobService.GetByCategory(categoryId);
+        var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
+
+        var categories = await _categoryService.GetAll();
+        var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
+
+        var indexViewModel = new IndexViewModel
+        {
+            Jobs = jobsResponse,
+            Categories = categoriesResponse,
+            IsSingleCategoryView = true
         };
 
         return indexViewModel;
