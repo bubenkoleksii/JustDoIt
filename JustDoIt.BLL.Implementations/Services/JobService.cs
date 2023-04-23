@@ -51,7 +51,9 @@ public class JobService : IJobService
     public async Task Remove(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob != null) await _jobRepository.Remove(id);
+
+        if (existingJob != null) 
+            await _jobRepository.Remove(id);
     }
 
     public async Task Check(Guid id)
