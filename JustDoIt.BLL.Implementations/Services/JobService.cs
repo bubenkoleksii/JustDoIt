@@ -52,14 +52,14 @@ public class JobService : IJobService
     {
         var existingJob = await _jobRepository.GetOneById(id);
 
-        if (existingJob != null) 
+        if (existingJob != null)
             await _jobRepository.Remove(id);
     }
 
     public async Task Check(Guid id)
     {
         var existingJob = await _jobRepository.GetOneById(id);
-        if (existingJob == null) 
+        if (existingJob == null)
             throw new ArgumentNullException("The job was not found and its status cannot be changed.");
 
         if (existingJob.IsCompleted)

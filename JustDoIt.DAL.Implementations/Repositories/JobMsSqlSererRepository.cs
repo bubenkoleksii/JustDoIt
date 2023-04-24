@@ -5,11 +5,11 @@ using JustDoIt.DAL.Interfaces;
 
 namespace JustDoIt.DAL.Implementations.Repositories;
 
-public class JobRepository : IJobRepository
+public class JobMsSqlServerRepository : IJobRepository
 {
     private readonly DbFactory _factory;
 
-    public JobRepository(DbFactory factory)
+    public JobMsSqlServerRepository(DbFactory factory)
     {
         _factory = factory;
     }

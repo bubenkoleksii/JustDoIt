@@ -38,9 +38,18 @@
         </div>
     }
 
-    <form asp-controller="Index" asp-action="Index" class="d-end" method="get">
-        <button type="submit" class="btn btn-secondary">Reset all</button>
-    </form>
+    <div class="d-end">
+        <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
+            <select class="form-select storage-select" name="typeOfStorage" onchange="document.getElementById('storageForm').submit()">
+                <option value="MsSqlServer" form="storageForm">MS SQL Server</option>
+                <option value="Xml"  form="storageForm">XML</option>
+            </select>
+        </form>
+
+        <form asp-controller="Index" asp-action="Index" method="get">
+            <button type="submit" class="btn btn-secondary">Reset all</button>
+        </form>
+    </div>
 
     <div class="content-container display-2">
         <div class="content-container__job-container">

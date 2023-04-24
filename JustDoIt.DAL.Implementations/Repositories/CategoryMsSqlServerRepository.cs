@@ -5,11 +5,11 @@ using JustDoIt.DAL.Interfaces;
 
 namespace JustDoIt.DAL.Implementations.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryMsSqlServerRepository : ICategoryRepository
 {
     private readonly DbFactory _factory;
 
-    public CategoryRepository(DbFactory factory)
+    public CategoryMsSqlServerRepository(DbFactory factory)
     {
         _factory = factory;
     }

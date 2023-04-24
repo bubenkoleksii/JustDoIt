@@ -2,7 +2,6 @@
 using JustDoIt.BLL.Implementations;
 using JustDoIt.BLL.Implementations.Services;
 using JustDoIt.BLL.Models.Request;
-using JustDoIt.BLL.Models.Response;
 using JustDoIt.DAL.Entities.Request;
 using JustDoIt.DAL.Entities.Response;
 using JustDoIt.DAL.Interfaces;
@@ -22,7 +21,6 @@ public class CategoryServiceTests
             configure => configure.AddProfile(new BllMappingProfile()));
 
         _mockMapper = mockMapperConfiguration.CreateMapper();
-
     }
 
     [TestMethod]
@@ -38,7 +36,7 @@ public class CategoryServiceTests
         var category = new CategoryEntityResponse { Id = categoryId };
 
         categoryRepositoryMock.Setup(repo => repo.GetOneByName(categoryName)).ReturnsAsync(category);
-        
+
         var categoryService = new CategoryService(categoryRepositoryMock.Object, _mockMapper);
 
         // Act
@@ -59,7 +57,8 @@ public class CategoryServiceTests
 
         var categories = new List<CategoryEntityRequest>();
 
-        categoryRepositoryMock.Setup(repo => repo.GetOneByName(categoryName)).ReturnsAsync(null as CategoryEntityResponse);
+        categoryRepositoryMock.Setup(repo => repo.GetOneByName(categoryName))
+            .ReturnsAsync(null as CategoryEntityResponse);
         categoryRepositoryMock.Setup(repo => repo.Add(It.IsAny<CategoryEntityRequest>()))
             .Callback((CategoryEntityRequest c) => categories.Add(categoryEntityRequest));
 
@@ -83,7 +82,8 @@ public class CategoryServiceTests
         var categoriesDll = new List<CategoryEntityResponse> { category };
 
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId)).ReturnsAsync(category);
-        categoryRepositoryMock.Setup(repo => repo.Remove(categoryId)).Callback((Guid id) => categoriesDll.Remove(category));
+        categoryRepositoryMock.Setup(repo => repo.Remove(categoryId))
+            .Callback((Guid id) => categoriesDll.Remove(category));
 
         var categoryService = new CategoryService(categoryRepositoryMock.Object, _mockMapper);
 

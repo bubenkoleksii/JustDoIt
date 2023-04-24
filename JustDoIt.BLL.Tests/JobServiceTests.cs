@@ -20,7 +20,6 @@ public class JobServiceTests
             configure => configure.AddProfile(new BllMappingProfile()));
 
         _mockMapper = mockMapperConfiguration.CreateMapper();
-
     }
 
     [TestMethod]
@@ -29,23 +28,22 @@ public class JobServiceTests
         // Arrange
         var categoryRepositoryMock = new Mock<ICategoryRepository>();
         var jobRepositoryMock = new Mock<IJobRepository>();
-        
+
         var categoryId = Guid.Parse("0E984725-C41C-4BF4-9960-E1C80E27ABA0");
         var category = new CategoryEntityResponse { Id = categoryId };
 
         var jobsDllResponse = new List<JobEntityResponse>
         {
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" },
-            
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" }
         };
 
         var jobsBllResponse = new List<JobModelResponse>
         {
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" }
         };
 
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId)).ReturnsAsync(category);
@@ -72,10 +70,9 @@ public class JobServiceTests
 
         var jobsDllResponse = new List<JobEntityResponse>
         {
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
-            new() {Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" },
-
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task1" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task2" },
+            new() { Id = It.IsAny<Guid>(), CategoryId = categoryId, Name = "Task3" }
         };
 
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId)).ReturnsAsync(category);
@@ -119,7 +116,7 @@ public class JobServiceTests
 
         jobRepositoryMock.Setup(repo => repo.GetOneById(jobId)).ReturnsAsync(job);
         jobRepositoryMock.Setup(repo => repo.Remove(jobId)).Callback((Guid id) => jobsDll.Remove(job));
-        
+
         var jobService = new JobService(jobRepositoryMock.Object, It.IsAny<ICategoryRepository>(), _mockMapper);
 
         // Act
@@ -137,8 +134,9 @@ public class JobServiceTests
         var jobId = Guid.Parse("0E984725-C41C-4BF4-9960-E1C80E27ABA0");
         var isCompleted = true;
 
-        var job = new JobEntityResponse { Id = jobId, CategoryId = It.IsAny<Guid>(), Name = "Task1", IsCompleted = isCompleted };
-        
+        var job = new JobEntityResponse
+            { Id = jobId, CategoryId = It.IsAny<Guid>(), Name = "Task1", IsCompleted = isCompleted };
+
         jobRepositoryMock.Setup(repo => repo.GetOneById(jobId)).ReturnsAsync(job);
 
         jobRepositoryMock.Setup(repo => repo.Check(jobId)).Callback((Guid id) => job.IsCompleted = !isCompleted);

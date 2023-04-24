@@ -29,8 +29,31 @@ public class IndexController : Controller
     {
         try
         {
+            var typeOfStorage = Request.Cookies["Storage"];
+
             var indexViewModel = await GetAllCategoriesAndJobs();
             return View(indexViewModel);
+        }
+        catch
+        {
+            return View("~/Views/Shared/InternalError.cshtml");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ChangeStorage(string typeOfStorage)
+    {
+        try
+        {
+            var cookieOptions = new CookieOptions
+            {
+                Expires = DateTime.Now.AddDays(1)
+            };
+
+            Response.Cookies.Append("Storage", typeOfStorage, cookieOptions);
+
+            var indexViewModel = await GetAllCategoriesAndJobs();
+            return View(nameof(Index), indexViewModel);
         }
         catch
         {
@@ -92,10 +115,7 @@ public class IndexController : Controller
         {
             await _jobService.Remove(id);
 
-            if (!isSingleCategoryView)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
             return View(nameof(Index), indexViewModel);
@@ -114,10 +134,7 @@ public class IndexController : Controller
         {
             await _jobService.Check(id);
 
-            if (!isSingleCategoryView)
-            {
-                return RedirectToAction(nameof(Index));
-            }
+            if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
             return View(nameof(Index), indexViewModel);
