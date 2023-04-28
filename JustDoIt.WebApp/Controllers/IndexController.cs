@@ -2,6 +2,7 @@
 using AutoMapper;
 using JustDoIt.BLL.Interfaces;
 using JustDoIt.BLL.Models.Request;
+using JustDoIt.Shared;
 using JustDoIt.WebApp.Models.Request;
 using JustDoIt.WebApp.Models.Response;
 using JustDoIt.WebApp.ViewModels;
@@ -30,6 +31,15 @@ public class IndexController : Controller
         try
         {
             var typeOfStorage = Request.Cookies["Storage"];
+            if (typeOfStorage == null)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(1)
+                };
+
+                Response.Cookies.Append("Storage", StorageType.MsSqlServer.ToString(), cookieOptions);
+            }
 
             var indexViewModel = await GetAllCategoriesAndJobs();
             return View(indexViewModel);
@@ -49,7 +59,6 @@ public class IndexController : Controller
             {
                 Expires = DateTime.Now.AddDays(1)
             };
-
             Response.Cookies.Append("Storage", typeOfStorage, cookieOptions);
 
             var indexViewModel = await GetAllCategoriesAndJobs();

@@ -164,14 +164,12 @@ label {
 
 .d-end {
     display: flex;
-    justify-content: end;
     gap: 30px;
+    justify-content: end;
     margin-top: 20px;
 }
 
-.storage-select {
-    width: 300px;
-}
+.storage-select { width: 300px; }
 
 .content-container__job-container {
     align-items: center;

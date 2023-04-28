@@ -9,4 +9,6 @@ public class IndexViewModel
     public ICollection<CategoryResponse>? Categories { get; set; }
 
     public bool IsSingleCategoryView { get; set; } = false;
+
+    public Dictionary<string, bool> StorageTypes { get; set; } = new();
 }

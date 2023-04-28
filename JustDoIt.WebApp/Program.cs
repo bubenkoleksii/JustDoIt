@@ -13,9 +13,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // DI
 builder.Services.AddSingleton<DbFactory>();
 builder.Services.AddScoped<IJobRepository, JobMsSqlServerRepository>();
-builder.Services.AddScoped<IJobRepository, JobXmlRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryMsSqlServerRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryXmlRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 

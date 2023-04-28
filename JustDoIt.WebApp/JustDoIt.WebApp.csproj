@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\JustDoIt.BLL.Implementations\JustDoIt.BLL.Implementations.csproj" />
 		<ProjectReference Include="..\JustDoIt.DAL.Implementations\JustDoIt.DAL.Implementations.csproj" />
+		<ProjectReference Include="..\JustDoIt.Shared\JustDoIt.Shared.csproj" />
 		<ProjectReference Include="..\JustDoIt.WebApp.Models\JustDoIt.WebApp.Models.csproj" />
 	</ItemGroup>
 

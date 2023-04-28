@@ -42,7 +42,7 @@
         <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
             <select class="form-select storage-select" name="typeOfStorage" onchange="document.getElementById('storageForm').submit()">
                 <option value="MsSqlServer" form="storageForm">MS SQL Server</option>
-                <option value="Xml"  form="storageForm">XML</option>
+                <option value="Xml" selected form="storageForm">XML</option>
             </select>
         </form>
 
