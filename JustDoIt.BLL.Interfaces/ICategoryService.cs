@@ -1,11 +1,12 @@
 ﻿using JustDoIt.BLL.Models.Request;
 using JustDoIt.BLL.Models.Response;
+using JustDoIt.Shared;
 
 namespace JustDoIt.BLL.Interfaces;
 
 public interface ICategoryService
 {
-    public Task<ICollection<CategoryModelResponse>> GetAll();
+    public Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType);
 
     public Task Add(CategoryModelRequest category);
 

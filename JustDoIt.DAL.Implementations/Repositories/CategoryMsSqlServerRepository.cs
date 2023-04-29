@@ -7,9 +7,9 @@ namespace JustDoIt.DAL.Implementations.Repositories;
 
 public class CategoryMsSqlServerRepository : ICategoryRepository
 {
-    private readonly DbFactory _factory;
+    private readonly MsSqlServerFactory _factory;
 
-    public CategoryMsSqlServerRepository(DbFactory factory)
+    public CategoryMsSqlServerRepository(MsSqlServerFactory factory)
     {
         _factory = factory;
     }

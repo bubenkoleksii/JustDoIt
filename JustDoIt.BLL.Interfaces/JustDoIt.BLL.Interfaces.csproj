@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JustDoIt.BLL.Models\JustDoIt.BLL.Models.csproj" />
+		<ProjectReference Include="..\JustDoIt.Shared\JustDoIt.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

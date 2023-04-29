@@ -4,6 +4,7 @@ using JustDoIt.BLL.Models.Request;
 using JustDoIt.BLL.Models.Response;
 using JustDoIt.DAL.Entities.Request;
 using JustDoIt.DAL.Interfaces;
+using JustDoIt.Shared;
 
 namespace JustDoIt.BLL.Implementations.Services;
 
@@ -13,13 +14,15 @@ public class CategoryService : ICategoryService
 
     private readonly IMapper _mapper;
 
-    public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+    private readonly IStorageFactory _storageFactory;
+
+    public CategoryService(IStorageFactory storageFactory, IMapper mapper)
     {
-        _categoryRepository = categoryRepository;
+        _storageFactory = storageFactory;
         _mapper = mapper;
     }
 
-    public async Task<ICollection<CategoryModelResponse>> GetAll()
+    public async Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType)
     {
         var categories = await _categoryRepository.GetAll();
 

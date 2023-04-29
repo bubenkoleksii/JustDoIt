@@ -4,12 +4,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace JustDoIt.DAL.Implementations;
 
-public class DbFactory
+public class MsSqlServerFactory
 {
     private readonly IConfiguration _configuration;
     private readonly string _connectionString;
 
-    public DbFactory(IConfiguration configuration)
+    public MsSqlServerFactory(IConfiguration configuration)
     {
         _configuration = configuration;
         _connectionString = _configuration.GetConnectionString("DefaultConnectionString");

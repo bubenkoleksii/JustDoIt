@@ -14,6 +14,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JustDoIt.DAL.Interfaces\JustDoIt.DAL.Interfaces.csproj" />
+		<ProjectReference Include="..\JustDoIt.Shared\JustDoIt.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

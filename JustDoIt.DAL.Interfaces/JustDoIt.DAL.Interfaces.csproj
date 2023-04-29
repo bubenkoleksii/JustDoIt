@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JustDoIt.DAL.Entities\JustDoIt.DAL.Entities.csproj" />
+		<ProjectReference Include="..\JustDoIt.Shared\JustDoIt.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

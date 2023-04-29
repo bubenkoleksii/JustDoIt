@@ -7,9 +7,9 @@ namespace JustDoIt.DAL.Implementations.Repositories;
 
 public class JobMsSqlServerRepository : IJobRepository
 {
-    private readonly DbFactory _factory;
+    private readonly MsSqlServerFactory _factory;
 
-    public JobMsSqlServerRepository(DbFactory factory)
+    public JobMsSqlServerRepository(MsSqlServerFactory factory)
     {
         _factory = factory;
     }

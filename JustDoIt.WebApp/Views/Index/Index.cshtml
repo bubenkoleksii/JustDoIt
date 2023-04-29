@@ -41,8 +41,17 @@
     <div class="d-end">
         <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
             <select class="form-select storage-select" name="typeOfStorage" onchange="document.getElementById('storageForm').submit()">
-                <option value="MsSqlServer" form="storageForm">MS SQL Server</option>
-                <option value="Xml" selected form="storageForm">XML</option>
+                @foreach (var storageType in Model.StorageTypes)
+                {
+                    @if (storageType.Value)
+                    {
+                        <option value="@storageType.Key" selected form="storageForm">@storageType.Key</option>
+                    }
+                    else
+                    {
+                        <option value="@storageType.Key" form="storageForm">@storageType.Key</option>
+                    }
+                }
             </select>
         </form>
 

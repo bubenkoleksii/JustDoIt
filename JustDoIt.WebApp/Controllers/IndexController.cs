@@ -30,18 +30,20 @@ public class IndexController : Controller
     {
         try
         {
-            var typeOfStorage = Request.Cookies["Storage"];
-            if (typeOfStorage == null)
+            var storageType = Request.Cookies["Storage"];
+            if (storageType == null)
             {
+                storageType = StorageType.MsSqlServer.ToString();
+
                 var cookieOptions = new CookieOptions
                 {
                     Expires = DateTime.Now.AddDays(1)
                 };
 
-                Response.Cookies.Append("Storage", StorageType.MsSqlServer.ToString(), cookieOptions);
+                Response.Cookies.Append("Storage", storageType, cookieOptions);
             }
 
-            var indexViewModel = await GetAllCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(indexViewModel);
         }
         catch
@@ -51,7 +53,7 @@ public class IndexController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> ChangeStorage(string typeOfStorage)
+    public async Task<IActionResult> ChangeStorage(string storageType)
     {
         try
         {
@@ -59,9 +61,10 @@ public class IndexController : Controller
             {
                 Expires = DateTime.Now.AddDays(1)
             };
-            Response.Cookies.Append("Storage", typeOfStorage, cookieOptions);
 
-            var indexViewModel = await GetAllCategoriesAndJobs();
+            Response.Cookies.Append("Storage", storageType, cookieOptions);
+
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -73,16 +76,18 @@ public class IndexController : Controller
     [HttpGet]
     public async Task<IActionResult> GetJobsByCategory(Guid id)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
-            var indexViewModel = await GetCategoriesAndJobsByCategory(id);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(id, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -95,13 +100,15 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddJob(JobRequest job)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
             if (!ModelState.IsValid)
             {
                 TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
 
-                var indexViewModel = await GetAllCategoriesAndJobs();
+                var indexViewModel = await GetAllCategoriesAndJobs(storageType);
                 return View(nameof(Index), indexViewModel);
             }
 
@@ -120,13 +127,15 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
             await _jobService.Remove(id);
 
             if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
 
-            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -139,20 +148,22 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CheckJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
             await _jobService.Check(id);
 
             if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
 
-            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -165,6 +176,8 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddCategory(CategoryRequest category)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
             if (!ModelState.IsValid)
@@ -172,7 +185,7 @@ public class IndexController : Controller
                 TempData["Error"] =
                     "The category was not added. Reopen the modal window with the adding category for details.";
 
-                var indexViewModel = await GetAllCategoriesAndJobs();
+                var indexViewModel = await GetAllCategoriesAndJobs(storageType);
                 return View(nameof(Index), indexViewModel);
             }
 
@@ -185,7 +198,7 @@ public class IndexController : Controller
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs();
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -210,39 +223,59 @@ public class IndexController : Controller
         }
     }
 
-    private async Task<IndexViewModel> GetAllCategoriesAndJobs()
+    private async Task<IndexViewModel> GetAllCategoriesAndJobs(string storageType)
     {
         var jobs = await _jobService.GetAll();
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
-        var categories = await _categoryService.GetAll();
+        var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
         var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
-        var indexViewModel = new IndexViewModel
-        {
-            Jobs = jobsResponse,
-            Categories = categoriesResponse
-        };
-
-        return indexViewModel;
-    }
-
-    private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId)
-    {
-        var jobs = await _jobService.GetByCategory(categoryId);
-        var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
-
-        var categories = await _categoryService.GetAll();
-        var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
+        var storageTypesDictionary = GetStorageTypesDictionary(storageType);
 
         var indexViewModel = new IndexViewModel
         {
             Jobs = jobsResponse,
             Categories = categoriesResponse,
-            IsSingleCategoryView = true
+            StorageTypes = storageTypesDictionary
         };
 
         return indexViewModel;
+    }
+
+    private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId, string storageType)
+    {
+        var jobs = await _jobService.GetByCategory(categoryId);
+        var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
+
+        var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
+        var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
+
+        var storageTypesDictionary = GetStorageTypesDictionary(storageType);
+
+        var indexViewModel = new IndexViewModel
+        {
+            Jobs = jobsResponse,
+            Categories = categoriesResponse,
+            IsSingleCategoryView = true,
+            StorageTypes = storageTypesDictionary
+        };
+
+        return indexViewModel;
+    }
+
+    private Dictionary<string, bool> GetStorageTypesDictionary(string selectedStorageType)
+    {
+        var storageTypesDictionary = Enum.GetValues<StorageType>()
+            .ToDictionary(storageType => storageType.ToString(),
+                storageType => storageType.ToString() == selectedStorageType);
+
+        return storageTypesDictionary;
+    }
+
+    private StorageType GetStorageTypeByString(string storageType)
+    {
+        return Enum.TryParse(storageType, out StorageType type) ? type : StorageType.Xml;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
