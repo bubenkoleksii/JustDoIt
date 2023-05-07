@@ -7,31 +7,31 @@ namespace JustDoIt.DAL.Implementations;
 
 public class StorageFactory : IStorageFactory
 {
-    private readonly IConfiguration _configuration;
+    private readonly MsSqlServerConnectionFactory _msSqlServerConnectionFactory;
 
-    private readonly MsSqlServerFactory _msSqlServerFactory;
+    private readonly XmlConnectionFactory _xmlConnectionFactory;
 
-    public StorageFactory(IConfiguration configuration, MsSqlServerFactory msSqlServerFactory)
+    public StorageFactory(MsSqlServerConnectionFactory msSqlServerConnectionFactory, XmlConnectionFactory xmlConnectionFactory)
     {
-        _configuration = configuration;
-        _msSqlServerFactory = msSqlServerFactory;
+        _msSqlServerConnectionFactory = msSqlServerConnectionFactory;
+        _xmlConnectionFactory = xmlConnectionFactory;
     }
 
-    public ICategoryRepository ChangeCategoryRepository(StorageType storageType)
+    public ICategoryRepository GetCategoryRepository(StorageType storageType)
     {
         return storageType switch
         {
-            StorageType.Xml => new CategoryXmlRepository(),
-            StorageType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerFactory)
+            StorageType.Xml => new CategoryXmlRepository(_xmlConnectionFactory),
+            StorageType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerConnectionFactory)
         };
     }
 
-    public IJobRepository ChangeJobRepository(StorageType storageType)
+    public IJobRepository GetJobRepository(StorageType storageType)
     {
         return storageType switch
         {
-            StorageType.Xml => new JobXmlRepository(),
-            StorageType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerFactory)
+            StorageType.Xml => new JobXmlRepository(_xmlConnectionFactory),
+            StorageType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerConnectionFactory)
         };
     }
 }

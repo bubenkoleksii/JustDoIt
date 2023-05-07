@@ -7,11 +7,11 @@ namespace JustDoIt.DAL.Implementations.Repositories;
 
 public class JobMsSqlServerRepository : IJobRepository
 {
-    private readonly MsSqlServerFactory _factory;
+    private readonly MsSqlServerConnectionFactory _connectionFactory;
 
-    public JobMsSqlServerRepository(MsSqlServerFactory factory)
+    public JobMsSqlServerRepository(MsSqlServerConnectionFactory connectionFactory)
     {
-        _factory = factory;
+        _connectionFactory = connectionFactory;
     }
 
     public async Task<IEnumerable<JobEntityResponse>> GetAll(bool sortByDueDate = true)
@@ -23,7 +23,7 @@ public class JobMsSqlServerRepository : IJobRepository
 
         queryString += sortByDueDate ? "ORDER BY Job.IsCompleted, DateDifferenceInMinutes" : "ORDER BY Job.IsCompleted";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         var jobs = await connection.QueryAsync<JobEntityResponse>(queryString);
 
         return jobs;
@@ -39,7 +39,7 @@ public class JobMsSqlServerRepository : IJobRepository
 
         queryString += sortByDueDate ? "ORDER BY Job.IsCompleted, DateDifferenceInMinutes" : "ORDER BY Job.IsCompleted";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         var jobs = await connection.QueryAsync<JobEntityResponse>(queryString, new { categoryId });
 
         return jobs;
@@ -49,7 +49,7 @@ public class JobMsSqlServerRepository : IJobRepository
     {
         var queryString = $"SELECT * FROM Job WHERE Id = @{nameof(id)}";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         var job = await connection.QueryFirstOrDefaultAsync<JobEntityResponse>(queryString, new { id });
 
         return job;
@@ -61,7 +61,7 @@ public class JobMsSqlServerRepository : IJobRepository
             "INSERT INTO Job (CategoryId, [Name], DueDate, IsCompleted) " +
             $"VALUES (@{nameof(job.CategoryId)}, @{nameof(job.Name)}, @{nameof(job.DueDate)}, @{nameof(job.IsCompleted)})";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         await connection.ExecuteAsync(queryString, job);
     }
 
@@ -69,7 +69,7 @@ public class JobMsSqlServerRepository : IJobRepository
     {
         var queryString = $"DELETE FROM Job WHERE Id = @{nameof(id)}";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         await connection.ExecuteAsync(queryString, new { id });
     }
 
@@ -77,7 +77,7 @@ public class JobMsSqlServerRepository : IJobRepository
     {
         var queryString = $"UPDATE Job SET IsCompleted = 1 WHERE Id = @{nameof(id)}";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         await connection.ExecuteAsync(queryString, new { id });
     }
 
@@ -85,7 +85,7 @@ public class JobMsSqlServerRepository : IJobRepository
     {
         var queryString = $"UPDATE Job SET IsCompleted = 0 WHERE Id = @{nameof(id)}";
 
-        using var connection = _factory.CreateConnection();
+        using var connection = _connectionFactory.GetConnection();
         await connection.ExecuteAsync(queryString, new { id });
     }
 }

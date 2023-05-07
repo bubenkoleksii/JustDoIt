@@ -40,7 +40,7 @@
 
     <div class="d-end">
         <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
-            <select class="form-select storage-select" name="typeOfStorage" onchange="document.getElementById('storageForm').submit()">
+            <select class="form-select storage-select" name="storageType" onchange="document.getElementById('storageForm').submit()">
                 @foreach (var storageType in Model.StorageTypes)
                 {
                     @if (storageType.Value)

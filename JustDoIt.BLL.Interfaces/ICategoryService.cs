@@ -8,7 +8,7 @@ public interface ICategoryService
 {
     public Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType);
 
-    public Task Add(CategoryModelRequest category);
+    public Task Add(CategoryModelRequest category, StorageType storageType);
 
-    public Task Remove(Guid id);
+    public Task Remove(Guid id, StorageType storageType);
 }

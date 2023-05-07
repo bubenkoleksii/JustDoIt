@@ -10,11 +10,11 @@ namespace JustDoIt.BLL.Implementations.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly ICategoryRepository _categoryRepository;
-
     private readonly IMapper _mapper;
 
     private readonly IStorageFactory _storageFactory;
+
+    private ICategoryRepository _categoryRepository;
 
     public CategoryService(IStorageFactory storageFactory, IMapper mapper)
     {
@@ -24,14 +24,18 @@ public class CategoryService : ICategoryService
 
     public async Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType)
     {
+        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+
         var categories = await _categoryRepository.GetAll();
 
         var categoriesResponse = _mapper.Map<IEnumerable<CategoryModelResponse>>(categories);
         return categoriesResponse.ToList();
     }
 
-    public async Task Add(CategoryModelRequest category)
+    public async Task Add(CategoryModelRequest category, StorageType storageType)
     {
+        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+
         var categoryRequest = _mapper.Map<CategoryEntityRequest>(category);
 
         var existingCategory = await _categoryRepository.GetOneByName(categoryRequest.Name);
@@ -41,9 +45,12 @@ public class CategoryService : ICategoryService
         await _categoryRepository.Add(categoryRequest);
     }
 
-    public async Task Remove(Guid id)
+    public async Task Remove(Guid id, StorageType storageType)
     {
-        var existingCategory = _categoryRepository.GetOneById(id);
-        if (existingCategory != null) await _categoryRepository.Remove(id);
+        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+
+        var existingCategory = await _categoryRepository.GetOneById(id);
+        if (existingCategory != null) 
+            await _categoryRepository.Remove(id);
     }
 }

@@ -31,6 +31,7 @@ public class IndexController : Controller
         try
         {
             var storageType = Request.Cookies["Storage"];
+
             if (storageType == null)
             {
                 storageType = StorageType.MsSqlServer.ToString();
@@ -113,7 +114,7 @@ public class IndexController : Controller
             }
 
             var jobModelRequest = _mapper.Map<JobModelRequest>(job);
-            await _jobService.Add(jobModelRequest);
+            await _jobService.Add(jobModelRequest, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -131,9 +132,10 @@ public class IndexController : Controller
 
         try
         {
-            await _jobService.Remove(id);
+            await _jobService.Remove(id, GetStorageTypeByString(storageType));
 
-            if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
+            if (!isSingleCategoryView) 
+                return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
@@ -152,9 +154,10 @@ public class IndexController : Controller
 
         try
         {
-            await _jobService.Check(id);
+            await _jobService.Check(id, GetStorageTypeByString(storageType));
 
-            if (!isSingleCategoryView) return RedirectToAction(nameof(Index));
+            if (!isSingleCategoryView) 
+                return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
@@ -190,7 +193,7 @@ public class IndexController : Controller
             }
 
             var categoryRequest = _mapper.Map<CategoryModelRequest>(category);
-            await _categoryService.Add(categoryRequest);
+            await _categoryService.Add(categoryRequest, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -211,9 +214,11 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveCategory(Guid id)
     {
+        var storageType = Request.Cookies["Storage"];
+
         try
         {
-            await _categoryService.Remove(id);
+            await _categoryService.Remove(id, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -225,7 +230,7 @@ public class IndexController : Controller
 
     private async Task<IndexViewModel> GetAllCategoriesAndJobs(string storageType)
     {
-        var jobs = await _jobService.GetAll();
+        var jobs = await _jobService.GetAll(GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
         var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
@@ -245,7 +250,7 @@ public class IndexController : Controller
 
     private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId, string storageType)
     {
-        var jobs = await _jobService.GetByCategory(categoryId);
+        var jobs = await _jobService.GetByCategory(categoryId, GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
         var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
