@@ -12,22 +12,22 @@ public class JobService : IJobService
 {
     private readonly IMapper _mapper;
 
-    private readonly IStorageFactory _storageFactory;
+    private readonly IRepositoryFactory _repositoryFactory;
 
     private ICategoryRepository _categoryRepository;
 
     private  IJobRepository _jobRepository;
 
-    public JobService(IStorageFactory storageFactory, IMapper mapper)
+    public JobService(IRepositoryFactory repositoryFactory, IMapper mapper)
     {
-        _storageFactory = storageFactory;
+        _repositoryFactory = repositoryFactory;
         _mapper = mapper;
     }
 
-    public async Task<ICollection<JobModelResponse>> GetAll(StorageType storageType, bool sortByDueDate = true)
+    public async Task<ICollection<JobModelResponse>> GetAll(RepositoryType repositoryType, bool sortByDueDate = true)
     {
-        _jobRepository = _storageFactory.GetJobRepository(storageType);
-        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+        _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
 
         var jobs = await _jobRepository.GetAll();
 
@@ -35,10 +35,10 @@ public class JobService : IJobService
         return jobsResponse.ToList();
     }
 
-    public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, StorageType storageType, bool sortByDueDate = true)
+    public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, RepositoryType repositoryType, bool sortByDueDate = true)
     {
-        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
-        _jobRepository = _storageFactory.GetJobRepository(storageType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
+        _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);
 
         var existingCategory = await _categoryRepository.GetOneById(categoryId);
         if (existingCategory == null)
@@ -50,17 +50,17 @@ public class JobService : IJobService
         return jobsResponse.ToList();
     }
 
-    public async Task Add(JobModelRequest job, StorageType storageType)
+    public async Task Add(JobModelRequest job, RepositoryType repositoryType)
     {
-        _jobRepository = _storageFactory.GetJobRepository(storageType);
+        _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);
 
         var jobRequest = _mapper.Map<JobEntityRequest>(job);
         await _jobRepository.Add(jobRequest);
     }
 
-    public async Task Remove(Guid id, StorageType storageType)
+    public async Task Remove(Guid id, RepositoryType repositoryType)
     {
-        _jobRepository = _storageFactory.GetJobRepository(storageType);
+        _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);
 
         var existingJob = await _jobRepository.GetOneById(id);
 
@@ -68,9 +68,9 @@ public class JobService : IJobService
             await _jobRepository.Remove(id);
     }
 
-    public async Task Check(Guid id, StorageType storageType)
+    public async Task Check(Guid id, RepositoryType repositoryType)
     {
-        _jobRepository = _storageFactory.GetJobRepository(storageType);
+        _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);
 
         var existingJob = await _jobRepository.GetOneById(id);
         if (existingJob == null)

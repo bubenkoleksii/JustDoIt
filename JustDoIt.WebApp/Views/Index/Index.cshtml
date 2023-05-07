@@ -1,4 +1,7 @@
-﻿@model IndexViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using JustDoIt.Shared
+@using System.ComponentModel
+@model IndexViewModel
 
 @{
     var categoryMap = Model.Categories != null ? Model.Categories!.ToDictionary(c => c.Id, c => c.Name) : null;
@@ -22,6 +25,15 @@
     };
 
     var errorMessage = TempData["Error"]?.ToString();
+
+    string GetRepositoryDescription(string name)
+    {
+        var repositoryType = Enum.TryParse(name, out RepositoryType type) ? type : RepositoryType.Xml;
+
+        var field = repositoryType.GetType().GetField(repositoryType.ToString());
+        var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
+        return attribute?.Description ?? repositoryType.ToString();
+    }
 }
 
 <div class="text-center">
@@ -40,16 +52,16 @@
 
     <div class="d-end">
         <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
-            <select class="form-select storage-select" name="storageType" onchange="document.getElementById('storageForm').submit()">
+            <select class="form-select storage-select" name="repositoryType" onchange="document.getElementById('storageForm').submit()">
                 @foreach (var storageType in Model.StorageTypes)
                 {
                     @if (storageType.Value)
                     {
-                        <option value="@storageType.Key" selected form="storageForm">@storageType.Key</option>
+                        <option value="@storageType.Key" selected form="storageForm">@GetRepositoryDescription(@storageType.Key)</option>
                     }
                     else
                     {
-                        <option value="@storageType.Key" form="storageForm">@storageType.Key</option>
+                        <option value="@storageType.Key" form="storageForm">@GetRepositoryDescription(@storageType.Key)</option>
                     }
                 }
             </select>

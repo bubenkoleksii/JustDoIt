@@ -14,7 +14,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddSingleton<MsSqlServerConnectionFactory>();
 builder.Services.AddSingleton<XmlConnectionFactory>();
 
-builder.Services.AddSingleton<IStorageFactory, StorageFactory>();
+builder.Services.AddSingleton<IRepositoryFactory, RepositoryFactory>();
 
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();

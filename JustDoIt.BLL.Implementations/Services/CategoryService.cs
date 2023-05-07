@@ -12,19 +12,19 @@ public class CategoryService : ICategoryService
 {
     private readonly IMapper _mapper;
 
-    private readonly IStorageFactory _storageFactory;
+    private readonly IRepositoryFactory _repositoryFactory;
 
     private ICategoryRepository _categoryRepository;
 
-    public CategoryService(IStorageFactory storageFactory, IMapper mapper)
+    public CategoryService(IRepositoryFactory repositoryFactory, IMapper mapper)
     {
-        _storageFactory = storageFactory;
+        _repositoryFactory = repositoryFactory;
         _mapper = mapper;
     }
 
-    public async Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType)
+    public async Task<ICollection<CategoryModelResponse>> GetAll(RepositoryType repositoryType)
     {
-        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
 
         var categories = await _categoryRepository.GetAll();
 
@@ -32,9 +32,9 @@ public class CategoryService : ICategoryService
         return categoriesResponse.ToList();
     }
 
-    public async Task Add(CategoryModelRequest category, StorageType storageType)
+    public async Task Add(CategoryModelRequest category, RepositoryType repositoryType)
     {
-        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
 
         var categoryRequest = _mapper.Map<CategoryEntityRequest>(category);
 
@@ -45,9 +45,9 @@ public class CategoryService : ICategoryService
         await _categoryRepository.Add(categoryRequest);
     }
 
-    public async Task Remove(Guid id, StorageType storageType)
+    public async Task Remove(Guid id, RepositoryType repositoryType)
     {
-        _categoryRepository = _storageFactory.GetCategoryRepository(storageType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
 
         var existingCategory = await _categoryRepository.GetOneById(id);
         if (existingCategory != null) 

@@ -6,9 +6,9 @@ namespace JustDoIt.BLL.Interfaces;
 
 public interface ICategoryService
 {
-    public Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType);
+    public Task<ICollection<CategoryModelResponse>> GetAll(RepositoryType repositoryType);
 
-    public Task Add(CategoryModelRequest category, StorageType storageType);
+    public Task Add(CategoryModelRequest category, RepositoryType repositoryType);
 
-    public Task Remove(Guid id, StorageType storageType);
+    public Task Remove(Guid id, RepositoryType repositoryType);
 }
