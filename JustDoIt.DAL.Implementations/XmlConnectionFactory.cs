@@ -4,15 +4,15 @@ namespace JustDoIt.DAL.Implementations;
 
 public class XmlConnectionFactory
 {
-    private readonly string _storageFolderPath;
+    private readonly string _categoryStoragePath;
 
     private readonly string _jobStoragePath;
-
-    private readonly string _categoryStoragePath;
+    private readonly string _storageFolderPath;
 
     public XmlConnectionFactory(IConfiguration configuration)
     {
-        _storageFolderPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName, configuration.GetConnectionString("XmlStoragePath"));
+        _storageFolderPath = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName,
+            configuration.GetConnectionString("XmlStoragePath"));
 
         _jobStoragePath = configuration.GetConnectionString("XmlJobStoragePath");
         _categoryStoragePath = configuration.GetConnectionString("XmlCategoryStoragePath");

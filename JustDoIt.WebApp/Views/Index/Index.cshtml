@@ -1,6 +1,6 @@
-﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using System.ComponentModel
 @using JustDoIt.Shared
-@using System.ComponentModel
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IndexViewModel
 
 @{
@@ -57,11 +57,11 @@
                 {
                     @if (storageType.Value)
                     {
-                        <option value="@storageType.Key" selected form="storageForm">@GetRepositoryDescription(@storageType.Key)</option>
+                        <option value="@storageType.Key" selected form="storageForm">@GetRepositoryDescription(storageType.Key)</option>
                     }
                     else
                     {
-                        <option value="@storageType.Key" form="storageForm">@GetRepositoryDescription(@storageType.Key)</option>
+                        <option value="@storageType.Key" form="storageForm">@GetRepositoryDescription(storageType.Key)</option>
                     }
                 }
             </select>

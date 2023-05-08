@@ -134,7 +134,7 @@ public class IndexController : Controller
         {
             await _jobService.Remove(id, GetStorageTypeByString(repositoryType));
 
-            if (!isSingleCategoryView) 
+            if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, repositoryType);
@@ -156,7 +156,7 @@ public class IndexController : Controller
         {
             await _jobService.Check(id, GetStorageTypeByString(repositoryType));
 
-            if (!isSingleCategoryView) 
+            if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
 
             var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, repositoryType);

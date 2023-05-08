@@ -16,7 +16,7 @@ public class JobService : IJobService
 
     private ICategoryRepository _categoryRepository;
 
-    private  IJobRepository _jobRepository;
+    private IJobRepository _jobRepository;
 
     public JobService(IRepositoryFactory repositoryFactory, IMapper mapper)
     {
@@ -35,7 +35,8 @@ public class JobService : IJobService
         return jobsResponse.ToList();
     }
 
-    public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, RepositoryType repositoryType, bool sortByDueDate = true)
+    public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, RepositoryType repositoryType,
+        bool sortByDueDate = true)
     {
         _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
         _jobRepository = _repositoryFactory.GetJobRepository(repositoryType);

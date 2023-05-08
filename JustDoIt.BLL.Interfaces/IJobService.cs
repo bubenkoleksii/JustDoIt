@@ -8,7 +8,8 @@ public interface IJobService
 {
     public Task<ICollection<JobModelResponse>> GetAll(RepositoryType repositoryType, bool sortByDueDate = true);
 
-    public Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, RepositoryType repositoryType, bool sortByDueDate = true);
+    public Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, RepositoryType repositoryType,
+        bool sortByDueDate = true);
 
     public Task Add(JobModelRequest job, RepositoryType repositoryType);
 

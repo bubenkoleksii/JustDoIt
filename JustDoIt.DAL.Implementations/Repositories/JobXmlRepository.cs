@@ -1,17 +1,14 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Xml;
 using JustDoIt.DAL.Entities.Request;
 using JustDoIt.DAL.Entities.Response;
 using JustDoIt.DAL.Interfaces;
-using System.Xml;
 
 namespace JustDoIt.DAL.Implementations.Repositories;
 
 public class JobXmlRepository : IJobRepository
 {
-    private readonly string _jobStoragePath;
-
     private readonly string _categoryStoragePath;
+    private readonly string _jobStoragePath;
 
     public JobXmlRepository(XmlConnectionFactory connectionFactory)
     {
@@ -142,7 +139,7 @@ public class JobXmlRepository : IJobRepository
         job.CategoryId = Guid.Parse(jobXml.Attributes[nameof(job.CategoryId)].Value);
         job.DueDate = DateTime.Parse(jobXml.Attributes[nameof(job.DueDate)].Value);
         job.IsCompleted = bool.Parse(jobXml.Attributes[nameof(job.IsCompleted)].Value);
-        
+
         return job;
     }
 

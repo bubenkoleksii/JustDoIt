@@ -97,10 +97,7 @@ public class CategoryXmlRepository : ICategoryRepository
 
         document.Load(_jobStoragePath);
         var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{id}']");
-        foreach (XmlNode job in jobs)
-        {
-            document.DocumentElement.RemoveChild(job);
-        }
+        foreach (XmlNode job in jobs) document.DocumentElement.RemoveChild(job);
         document.Save(_jobStoragePath);
     }
 

@@ -50,7 +50,7 @@ public class CategoryService : ICategoryService
         _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
 
         var existingCategory = await _categoryRepository.GetOneById(id);
-        if (existingCategory != null) 
+        if (existingCategory != null)
             await _categoryRepository.Remove(id);
     }
 }
