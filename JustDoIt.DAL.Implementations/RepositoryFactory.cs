@@ -22,7 +22,8 @@ public class RepositoryFactory : IRepositoryFactory
         return storageType switch
         {
             StorageType.Xml => new CategoryXmlRepository(_xmlConnectionFactory),
-            StorageType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerConnectionFactory)
+            StorageType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerConnectionFactory),
+            _ => throw new ArgumentException("Incorrect storage type")
         };
     }
 
@@ -31,7 +32,8 @@ public class RepositoryFactory : IRepositoryFactory
         return storageType switch
         {
             StorageType.Xml => new JobXmlRepository(_xmlConnectionFactory),
-            StorageType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerConnectionFactory)
+            StorageType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerConnectionFactory),
+            _ => throw new ArgumentException("Incorrect storage type")
         };
     }
 }
