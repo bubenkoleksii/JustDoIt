@@ -18,140 +18,203 @@ public class JobXmlRepository : IJobRepository
 
     public async Task<IEnumerable<JobEntityResponse>> GetAll(bool sortByDueDate = true)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
-
-        var jobs = document.SelectNodes("/Jobs/Job");
-        if (jobs == null)
-            return null;
-
-        var jobsResponse = new List<JobEntityResponse>();
-        foreach (XmlNode job in jobs)
+        try
         {
-            var jobResponse = ParseXmlToJob(job);
-            jobResponse.DateDifferenceInMinutes = (int)(jobResponse.DueDate - DateTime.Now).TotalMinutes;
-            jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-            jobsResponse.Add(jobResponse);
+            var jobs = document.SelectNodes("/Jobs/Job");
+            if (jobs == null)
+                return null;
+
+            var jobsResponse = new List<JobEntityResponse>();
+            foreach (XmlNode job in jobs)
+            {
+                var jobResponse = ParseXmlToJob(job);
+                jobResponse.DateDifferenceInMinutes = (int)(jobResponse.DueDate - DateTime.Now).TotalMinutes;
+                jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
+
+                jobsResponse.Add(jobResponse);
+            }
+
+            return jobsResponse.OrderBy(j => j.IsCompleted)
+                .ThenBy(j => j.DateDifferenceInMinutes);
         }
-
-        return jobsResponse.OrderBy(j => j.IsCompleted)
-            .ThenBy(j => j.DateDifferenceInMinutes);
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<IEnumerable<JobEntityResponse>> GetByCategory(Guid categoryId, bool sortByDueDate = true)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
-
-        var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{categoryId}']");
-        if (jobs == null)
-            return null;
-
-        var jobsResponse = new List<JobEntityResponse>();
-        foreach (XmlNode job in jobs)
+        try
         {
-            var jobResponse = ParseXmlToJob(job);
-            jobResponse.DateDifferenceInMinutes = (int)(DateTime.Now - jobResponse.DueDate).TotalMinutes;
-            jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-            jobsResponse.Add(jobResponse);
+            var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{categoryId}']");
+            if (jobs == null)
+                return null;
+
+            var jobsResponse = new List<JobEntityResponse>();
+            foreach (XmlNode job in jobs)
+            {
+                var jobResponse = ParseXmlToJob(job);
+                jobResponse.DateDifferenceInMinutes = (int)(DateTime.Now - jobResponse.DueDate).TotalMinutes;
+                jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
+
+                jobsResponse.Add(jobResponse);
+            }
+
+            return jobsResponse.OrderBy(j => j.IsCompleted)
+                .ThenBy(j => j.DateDifferenceInMinutes);
         }
-
-        return jobsResponse.OrderBy(j => j.IsCompleted)
-            .ThenBy(j => j.DateDifferenceInMinutes);
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<JobEntityResponse> GetOneById(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobXml = document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
-        if (jobXml == null)
+            var jobXml = document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
+            if (jobXml == null)
+                return null;
+
+            var jobResponse = ParseXmlToJob(jobXml);
+            jobResponse.DateDifferenceInMinutes = (int)(DateTime.Now - jobResponse.DueDate).TotalMinutes;
+            jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
+
+            return jobResponse;
+        }
+        catch
+        {
             return null;
-
-        var jobResponse = ParseXmlToJob(jobXml);
-        jobResponse.DateDifferenceInMinutes = (int)(DateTime.Now - jobResponse.DueDate).TotalMinutes;
-        jobResponse.CategoryName = GetCategoryName(jobResponse.CategoryId);
-
-        return jobResponse;
+        }
     }
 
     public async Task Add(JobEntityRequest job)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobXml = document.CreateElement("Job");
-        var id = Guid.NewGuid();
+            var jobXml = document.CreateElement("Job");
+            var id = Guid.NewGuid();
 
-        jobXml.SetAttribute("Id", id.ToString());
-        jobXml.SetAttribute(nameof(job.CategoryId), job.CategoryId.ToString());
-        jobXml.SetAttribute(nameof(job.Name), job.Name);
-        jobXml.SetAttribute(nameof(job.DueDate), job.DueDate.ToString());
-        jobXml.SetAttribute(nameof(job.IsCompleted), job.IsCompleted.ToString());
+            jobXml.SetAttribute("Id", id.ToString());
+            jobXml.SetAttribute(nameof(job.CategoryId), job.CategoryId.ToString());
+            jobXml.SetAttribute(nameof(job.Name), job.Name);
+            jobXml.SetAttribute(nameof(job.DueDate), job.DueDate.ToString());
+            jobXml.SetAttribute(nameof(job.IsCompleted), job.IsCompleted.ToString());
 
-        document.DocumentElement.AppendChild(jobXml);
-        document.Save(_jobStoragePath);
+            document.DocumentElement.AppendChild(jobXml);
+            document.Save(_jobStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     public async Task Remove(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobXml = document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
-        if (jobXml == null)
-            return;
+            var jobXml = document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
+            if (jobXml == null)
+                return;
 
-        document.DocumentElement.RemoveChild(jobXml);
-        document.Save(_jobStoragePath);
+            document.DocumentElement.RemoveChild(jobXml);
+            document.Save(_jobStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     public async Task Check(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobXml = (XmlElement?)document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
-        jobXml.SetAttribute("IsCompleted", true.ToString());
+            var jobXml = (XmlElement?)document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
+            jobXml.SetAttribute("IsCompleted", true.ToString());
 
-        document.Save(_jobStoragePath);
+            document.Save(_jobStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     public async Task Uncheck(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobXml = (XmlElement?)document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
-        jobXml.SetAttribute("IsCompleted", false.ToString());
+            var jobXml = (XmlElement?)document.SelectSingleNode($"Jobs/Job[@Id='{id}']");
+            jobXml.SetAttribute("IsCompleted", false.ToString());
 
-        document.Save(_jobStoragePath);
+            document.Save(_jobStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     private JobEntityResponse ParseXmlToJob(XmlNode jobXml)
     {
-        var job = new JobEntityResponse();
-        job.Id = Guid.Parse(jobXml.Attributes[nameof(job.Id)].Value);
-        job.Name = jobXml.Attributes[nameof(job.Name)].Value;
-        job.CategoryId = Guid.Parse(jobXml.Attributes[nameof(job.CategoryId)].Value);
-        job.DueDate = DateTime.Parse(jobXml.Attributes[nameof(job.DueDate)].Value);
-        job.IsCompleted = bool.Parse(jobXml.Attributes[nameof(job.IsCompleted)].Value);
+        try
+        {
+            var job = new JobEntityResponse();
+            job.Id = Guid.Parse(jobXml.Attributes[nameof(job.Id)].Value);
+            job.Name = jobXml.Attributes[nameof(job.Name)].Value;
+            job.CategoryId = Guid.Parse(jobXml.Attributes[nameof(job.CategoryId)].Value);
+            job.DueDate = DateTime.Parse(jobXml.Attributes[nameof(job.DueDate)].Value);
+            job.IsCompleted = bool.Parse(jobXml.Attributes[nameof(job.IsCompleted)].Value);
 
-        return job;
+            return job;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     private string GetCategoryName(Guid categoryId)
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-        var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{categoryId}']");
-        if (categoryXml == null)
-            return null;
+            var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{categoryId}']");
+            if (categoryXml == null)
+                return null;
 
-        return categoryXml.Attributes["Name"].Value;
+            return categoryXml.Attributes["Name"].Value;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 }

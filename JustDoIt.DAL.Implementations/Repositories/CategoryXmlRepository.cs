@@ -19,103 +19,152 @@ public class CategoryXmlRepository : ICategoryRepository
 
     public async Task<IEnumerable<CategoryEntityResponse>> GetAll()
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
-
-        var categories = document.SelectNodes("/Categories/Category");
-        if (categories == null)
-            return null;
-
-        var categoriesResponse = new List<CategoryEntityResponse>();
-        foreach (XmlNode category in categories)
+        try
         {
-            var categoryResponse = ParseXmlToCategory(category);
-            categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-            categoriesResponse.Add(categoryResponse);
+            var categories = document.SelectNodes("/Categories/Category");
+            if (categories == null)
+                return null;
+
+            var categoriesResponse = new List<CategoryEntityResponse>();
+            foreach (XmlNode category in categories)
+            {
+                var categoryResponse = ParseXmlToCategory(category);
+                categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
+
+                categoriesResponse.Add(categoryResponse);
+            }
+
+            return categoriesResponse;
         }
-
-        return categoriesResponse;
+        catch
+        {
+            return null;
+        }
     }
 
     public async Task<CategoryEntityResponse> GetOneById(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-        var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{id}']");
-        if (categoryXml == null)
+            var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{id}']");
+            if (categoryXml == null)
+                return null;
+
+            var categoryResponse = ParseXmlToCategory(categoryXml);
+            categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
+
+            return categoryResponse;
+        }
+        catch
+        {
             return null;
-
-        var categoryResponse = ParseXmlToCategory(categoryXml);
-        categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
-
-        return categoryResponse;
+        }
     }
 
     public async Task<CategoryEntityResponse> GetOneByName(string name)
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-        var categoryXml = document.SelectSingleNode($"Categories/Category[@Name={name}]");
-        if (categoryXml == null)
+            var categoryXml = document.SelectSingleNode($"Categories/Category[@Name={name}]");
+            if (categoryXml == null)
+                return null;
+
+            var categoryResponse = ParseXmlToCategory(categoryXml);
+            categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
+
+            return categoryResponse;
+        }
+        catch
+        {
             return null;
-
-        var categoryResponse = ParseXmlToCategory(categoryXml);
-        categoryResponse.CountOfJobs = GetCountOfJobsInCategory(categoryResponse.Id);
-
-        return categoryResponse;
+        }
     }
 
     public async Task Add(CategoryEntityRequest category)
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-        var categoryXml = document.CreateElement("Category");
-        var id = Guid.NewGuid();
+            var categoryXml = document.CreateElement("Category");
+            var id = Guid.NewGuid();
 
-        categoryXml.SetAttribute("Id", id.ToString());
-        categoryXml.SetAttribute(nameof(category.Name), category.Name);
+            categoryXml.SetAttribute("Id", id.ToString());
+            categoryXml.SetAttribute(nameof(category.Name), category.Name);
 
-        document.DocumentElement.AppendChild(categoryXml);
-        document.Save(_categoryStoragePath);
+            document.DocumentElement.AppendChild(categoryXml);
+            document.Save(_categoryStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     public async Task Remove(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_categoryStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_categoryStoragePath);
 
-        var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{id}']");
-        if (categoryXml == null)
-            return;
+            var categoryXml = document.SelectSingleNode($"Categories/Category[@Id='{id}']");
+            if (categoryXml == null)
+                return;
 
-        document.DocumentElement.RemoveChild(categoryXml);
-        document.Save(_categoryStoragePath);
+            document.DocumentElement.RemoveChild(categoryXml);
+            document.Save(_categoryStoragePath);
 
-        document.Load(_jobStoragePath);
-        var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{id}']");
-        foreach (XmlNode job in jobs) document.DocumentElement.RemoveChild(job);
-        document.Save(_jobStoragePath);
+            document.Load(_jobStoragePath);
+            var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{id}']");
+            foreach (XmlNode job in jobs) document.DocumentElement.RemoveChild(job);
+            document.Save(_jobStoragePath);
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     private CategoryEntityResponse ParseXmlToCategory(XmlNode categoryXml)
     {
-        var category = new CategoryEntityResponse();
-        category.Id = Guid.Parse(categoryXml.Attributes[nameof(category.Id)].Value);
-        category.Name = categoryXml.Attributes[nameof(category.Name)].Value;
+        try
+        {
+            var category = new CategoryEntityResponse();
+            category.Id = Guid.Parse(categoryXml.Attributes[nameof(category.Id)].Value);
+            category.Name = categoryXml.Attributes[nameof(category.Name)].Value;
 
-        return category;
+            return category;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 
     private int GetCountOfJobsInCategory(Guid id)
     {
-        var document = new XmlDocument();
-        document.Load(_jobStoragePath);
+        try
+        {
+            var document = new XmlDocument();
+            document.Load(_jobStoragePath);
 
-        var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{id}']");
-        return jobs.Count;
+            var jobs = document.SelectNodes($"/Jobs/Job[@CategoryId='{id}']");
+            return jobs.Count;
+        }
+        catch (Exception exception)
+        {
+            throw exception;
+        }
     }
 }
