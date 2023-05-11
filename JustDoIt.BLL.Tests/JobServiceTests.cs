@@ -51,15 +51,15 @@ public class JobServiceTests
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId)).ReturnsAsync(category);
         jobRepositoryMock.Setup(repo => repo.GetByCategory(categoryId, It.IsAny<bool>())).ReturnsAsync(jobsDllResponse);
 
-        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<StorageType>()))
             .Returns(jobRepositoryMock.Object);
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
 
         // Act
-        var actualJobs = await jobService.GetByCategory(categoryId, It.IsAny<RepositoryType>());
+        var actualJobs = await jobService.GetByCategory(categoryId, It.IsAny<StorageType>());
 
         // Assert
         Assert.AreEqual(actualJobs.Count, jobsBllResponse.Count);
@@ -86,15 +86,15 @@ public class JobServiceTests
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId)).ReturnsAsync(category);
         jobRepositoryMock.Setup(repo => repo.GetByCategory(categoryId, It.IsAny<bool>())).ReturnsAsync(jobsDllResponse);
 
-        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<StorageType>()))
             .Returns(jobRepositoryMock.Object);
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
 
         // Act
-        var actualJobs = await jobService.GetByCategory(categoryId, It.IsAny<RepositoryType>());
+        var actualJobs = await jobService.GetByCategory(categoryId, It.IsAny<StorageType>());
 
         // Assert
         Assert.IsInstanceOfType(actualJobs, typeof(ICollection<JobModelResponse>));
@@ -111,7 +111,7 @@ public class JobServiceTests
 
         categoryRepositoryMock.Setup(repo => repo.GetOneById(categoryId))!.ReturnsAsync(null as CategoryEntityResponse);
 
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
@@ -119,7 +119,7 @@ public class JobServiceTests
         // Act
         // Assert
         await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
-            jobService.GetByCategory(categoryId, It.IsAny<RepositoryType>()));
+            jobService.GetByCategory(categoryId, It.IsAny<StorageType>()));
     }
 
     [TestMethod]
@@ -138,11 +138,11 @@ public class JobServiceTests
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
 
-        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<StorageType>()))
             .Returns(jobRepositoryMock.Object);
 
         // Act
-        await jobService.Remove(jobId, It.IsAny<RepositoryType>());
+        await jobService.Remove(jobId, It.IsAny<StorageType>());
 
         // Assert
         Assert.IsNull(jobsDll.FirstOrDefault(j => j.Id == jobId));
@@ -165,13 +165,13 @@ public class JobServiceTests
         jobRepositoryMock.Setup(repo => repo.Check(jobId)).Callback((Guid id) => job.IsCompleted = !isCompleted);
         jobRepositoryMock.Setup(repo => repo.Uncheck(jobId)).Callback((Guid id) => job.IsCompleted = !isCompleted);
 
-        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<StorageType>()))
             .Returns(jobRepositoryMock.Object);
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
 
         // Act
-        await jobService.Check(jobId, It.IsAny<RepositoryType>());
+        await jobService.Check(jobId, It.IsAny<StorageType>());
 
         // Assert
         Assert.AreEqual(job.IsCompleted, !isCompleted);
@@ -186,7 +186,7 @@ public class JobServiceTests
         var jobId = Guid.Parse("0E984725-C41C-4BF4-9960-E1C80E27ABA0");
 
         jobRepositoryMock.Setup(repo => repo.GetOneById(jobId))!.ReturnsAsync(null as JobEntityResponse);
-        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetJobRepository(It.IsAny<StorageType>()))
             .Returns(jobRepositoryMock.Object);
 
         var jobService = new JobService(storageFactory.Object, _mockMapper);
@@ -194,6 +194,6 @@ public class JobServiceTests
         // Act
         // Assert
         await Assert.ThrowsExceptionAsync<ArgumentNullException>(() =>
-            jobService.Check(jobId, It.IsAny<RepositoryType>()));
+            jobService.Check(jobId, It.IsAny<StorageType>()));
     }
 }

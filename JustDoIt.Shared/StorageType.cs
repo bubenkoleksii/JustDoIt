@@ -2,7 +2,7 @@
 
 namespace JustDoIt.Shared;
 
-public enum RepositoryType
+public enum StorageType
 {
     [Description("MS SQL Server")] MsSqlServer,
 

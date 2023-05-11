@@ -17,21 +17,21 @@ public class RepositoryFactory : IRepositoryFactory
         _xmlConnectionFactory = xmlConnectionFactory;
     }
 
-    public ICategoryRepository GetCategoryRepository(RepositoryType repositoryType)
+    public ICategoryRepository GetCategoryRepository(StorageType storageType)
     {
-        return repositoryType switch
+        return storageType switch
         {
-            RepositoryType.Xml => new CategoryXmlRepository(_xmlConnectionFactory),
-            RepositoryType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerConnectionFactory)
+            StorageType.Xml => new CategoryXmlRepository(_xmlConnectionFactory),
+            StorageType.MsSqlServer => new CategoryMsSqlServerRepository(_msSqlServerConnectionFactory)
         };
     }
 
-    public IJobRepository GetJobRepository(RepositoryType repositoryType)
+    public IJobRepository GetJobRepository(StorageType storageType)
     {
-        return repositoryType switch
+        return storageType switch
         {
-            RepositoryType.Xml => new JobXmlRepository(_xmlConnectionFactory),
-            RepositoryType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerConnectionFactory)
+            StorageType.Xml => new JobXmlRepository(_xmlConnectionFactory),
+            StorageType.MsSqlServer => new JobMsSqlServerRepository(_msSqlServerConnectionFactory)
         };
     }
 }

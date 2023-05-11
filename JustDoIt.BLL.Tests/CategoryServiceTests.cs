@@ -38,7 +38,7 @@ public class CategoryServiceTests
         var category = new CategoryEntityResponse { Id = categoryId };
 
         categoryRepositoryMock.Setup(repo => repo.GetOneByName(categoryName)).ReturnsAsync(category);
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var categoryService = new CategoryService(storageFactory.Object, _mockMapper);
@@ -46,7 +46,7 @@ public class CategoryServiceTests
         // Act
         // Assert
         await Assert.ThrowsExceptionAsync<ArgumentException>(() =>
-            categoryService.Add(categoryRequest, It.IsAny<RepositoryType>()));
+            categoryService.Add(categoryRequest, It.IsAny<StorageType>()));
     }
 
     [TestMethod]
@@ -68,13 +68,13 @@ public class CategoryServiceTests
         categoryRepositoryMock.Setup(repo => repo.Add(It.IsAny<CategoryEntityRequest>()))
             .Callback((CategoryEntityRequest c) => categories.Add(categoryEntityRequest));
 
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var categoryService = new CategoryService(storageFactory.Object, _mockMapper);
 
         // Act
-        await categoryService.Add(categoryModelRequest, It.IsAny<RepositoryType>());
+        await categoryService.Add(categoryModelRequest, It.IsAny<StorageType>());
 
         // Assert
         Assert.IsNotNull(categories.FirstOrDefault(c => c.Name == categoryName));
@@ -96,13 +96,13 @@ public class CategoryServiceTests
         categoryRepositoryMock.Setup(repo => repo.Remove(categoryId))
             .Callback((Guid id) => categoriesDll.Remove(category));
 
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<RepositoryType>()))
+        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
         var categoryService = new CategoryService(storageFactory.Object, _mockMapper);
 
         // Act
-        await categoryService.Remove(categoryId, It.IsAny<RepositoryType>());
+        await categoryService.Remove(categoryId, It.IsAny<StorageType>());
 
         // Assert
         Assert.IsNull(categoriesDll.FirstOrDefault(c => c.Id == categoryId));

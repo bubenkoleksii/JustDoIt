@@ -22,9 +22,9 @@ public class CategoryService : ICategoryService
         _mapper = mapper;
     }
 
-    public async Task<ICollection<CategoryModelResponse>> GetAll(RepositoryType repositoryType)
+    public async Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
 
         var categories = await _categoryRepository.GetAll();
 
@@ -32,9 +32,9 @@ public class CategoryService : ICategoryService
         return categoriesResponse.ToList();
     }
 
-    public async Task Add(CategoryModelRequest category, RepositoryType repositoryType)
+    public async Task Add(CategoryModelRequest category, StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
 
         var categoryRequest = _mapper.Map<CategoryEntityRequest>(category);
 
@@ -45,9 +45,9 @@ public class CategoryService : ICategoryService
         await _categoryRepository.Add(categoryRequest);
     }
 
-    public async Task Remove(Guid id, RepositoryType repositoryType)
+    public async Task Remove(Guid id, StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(repositoryType);
+        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
 
         var existingCategory = await _categoryRepository.GetOneById(id);
         if (existingCategory != null)

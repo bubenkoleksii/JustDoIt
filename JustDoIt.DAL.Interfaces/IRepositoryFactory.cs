@@ -4,7 +4,7 @@ namespace JustDoIt.DAL.Interfaces;
 
 public interface IRepositoryFactory
 {
-    public ICategoryRepository GetCategoryRepository(RepositoryType repositoryType);
+    public ICategoryRepository GetCategoryRepository(StorageType storageType);
 
-    public IJobRepository GetJobRepository(RepositoryType repositoryType);
+    public IJobRepository GetJobRepository(StorageType storageType);
 }

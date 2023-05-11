@@ -30,21 +30,21 @@ public class IndexController : Controller
     {
         try
         {
-            var repositoryType = Request.Cookies["Storage"];
+            var storageType = Request.Cookies["Storage"];
 
-            if (repositoryType == null)
+            if (storageType == null)
             {
-                repositoryType = RepositoryType.MsSqlServer.ToString();
+                storageType = StorageType.MsSqlServer.ToString();
 
                 var cookieOptions = new CookieOptions
                 {
                     Expires = DateTime.Now.AddDays(1)
                 };
 
-                Response.Cookies.Append("Storage", repositoryType, cookieOptions);
+                Response.Cookies.Append("Storage", storageType, cookieOptions);
             }
 
-            var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(indexViewModel);
         }
         catch
@@ -54,7 +54,7 @@ public class IndexController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> ChangeStorage(string repositoryType)
+    public async Task<IActionResult> ChangeStorage(string storageType)
     {
         try
         {
@@ -63,9 +63,9 @@ public class IndexController : Controller
                 Expires = DateTime.Now.AddDays(1)
             };
 
-            Response.Cookies.Append("Storage", repositoryType, cookieOptions);
+            Response.Cookies.Append("Storage", storageType, cookieOptions);
 
-            var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -77,18 +77,18 @@ public class IndexController : Controller
     [HttpGet]
     public async Task<IActionResult> GetJobsByCategory(Guid id)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
-            var indexViewModel = await GetCategoriesAndJobsByCategory(id, repositoryType);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(id, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -101,7 +101,7 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddJob(JobRequest job)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
@@ -109,12 +109,12 @@ public class IndexController : Controller
             {
                 TempData["Error"] = "The job was not added. Reopen the modal window with the adding job for details.";
 
-                var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+                var indexViewModel = await GetAllCategoriesAndJobs(storageType);
                 return View(nameof(Index), indexViewModel);
             }
 
             var jobModelRequest = _mapper.Map<JobModelRequest>(job);
-            await _jobService.Add(jobModelRequest, GetStorageTypeByString(repositoryType));
+            await _jobService.Add(jobModelRequest, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -128,16 +128,16 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
-            await _jobService.Remove(id, GetStorageTypeByString(repositoryType));
+            await _jobService.Remove(id, GetStorageTypeByString(storageType));
 
             if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
 
-            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, repositoryType);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -150,23 +150,23 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CheckJob(Guid id, Guid categoryId, bool isSingleCategoryView)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
-            await _jobService.Check(id, GetStorageTypeByString(repositoryType));
+            await _jobService.Check(id, GetStorageTypeByString(storageType));
 
             if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
 
-            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, repositoryType);
+            var indexViewModel = await GetCategoriesAndJobsByCategory(categoryId, storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch (ArgumentNullException exception)
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -179,7 +179,7 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> AddCategory(CategoryRequest category)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
@@ -188,12 +188,12 @@ public class IndexController : Controller
                 TempData["Error"] =
                     "The category was not added. Reopen the modal window with the adding category for details.";
 
-                var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+                var indexViewModel = await GetAllCategoriesAndJobs(storageType);
                 return View(nameof(Index), indexViewModel);
             }
 
             var categoryRequest = _mapper.Map<CategoryModelRequest>(category);
-            await _categoryService.Add(categoryRequest, GetStorageTypeByString(repositoryType));
+            await _categoryService.Add(categoryRequest, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -201,7 +201,7 @@ public class IndexController : Controller
         {
             TempData["Error"] = exception.Message;
 
-            var indexViewModel = await GetAllCategoriesAndJobs(repositoryType);
+            var indexViewModel = await GetAllCategoriesAndJobs(storageType);
             return View(nameof(Index), indexViewModel);
         }
         catch
@@ -214,11 +214,11 @@ public class IndexController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> RemoveCategory(Guid id)
     {
-        var repositoryType = Request.Cookies["Storage"];
+        var storageType = Request.Cookies["Storage"];
 
         try
         {
-            await _categoryService.Remove(id, GetStorageTypeByString(repositoryType));
+            await _categoryService.Remove(id, GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -228,42 +228,42 @@ public class IndexController : Controller
         }
     }
 
-    private async Task<IndexViewModel> GetAllCategoriesAndJobs(string repositoryType)
+    private async Task<IndexViewModel> GetAllCategoriesAndJobs(string storageType)
     {
-        var jobs = await _jobService.GetAll(GetStorageTypeByString(repositoryType));
+        var jobs = await _jobService.GetAll(GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
-        var categories = await _categoryService.GetAll(GetStorageTypeByString(repositoryType));
+        var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
         var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
-        var repositoryTypesDictionary = GetStorageTypesDictionary(repositoryType);
+        var storageTypesDictionary = GetStorageTypesDictionary(storageType);
 
         var indexViewModel = new IndexViewModel
         {
             Jobs = jobsResponse,
             Categories = categoriesResponse,
-            StorageTypes = repositoryTypesDictionary
+            StorageTypes = storageTypesDictionary
         };
 
         return indexViewModel;
     }
 
-    private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId, string repositoryType)
+    private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId, string storageType)
     {
-        var jobs = await _jobService.GetByCategory(categoryId, GetStorageTypeByString(repositoryType));
+        var jobs = await _jobService.GetByCategory(categoryId, GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
-        var categories = await _categoryService.GetAll(GetStorageTypeByString(repositoryType));
+        var categories = await _categoryService.GetAll(GetStorageTypeByString(storageType));
         var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
-        var repositoryTypesDictionary = GetStorageTypesDictionary(repositoryType);
+        var storageTypesDictionary = GetStorageTypesDictionary(storageType);
 
         var indexViewModel = new IndexViewModel
         {
             Jobs = jobsResponse,
             Categories = categoriesResponse,
             IsSingleCategoryView = true,
-            StorageTypes = repositoryTypesDictionary
+            StorageTypes = storageTypesDictionary
         };
 
         return indexViewModel;
@@ -271,16 +271,16 @@ public class IndexController : Controller
 
     private Dictionary<string, bool> GetStorageTypesDictionary(string selectedStorageType)
     {
-        var repositoryTypesDictionary = Enum.GetValues<RepositoryType>()
-            .ToDictionary(repositoryType => repositoryType.ToString(),
-                repositoryType => repositoryType.ToString() == selectedStorageType);
+        var storageTypesDictionary = Enum.GetValues<StorageType>()
+            .ToDictionary(storageType => storageType.ToString(),
+                storageType => storageType.ToString() == selectedStorageType);
 
-        return repositoryTypesDictionary;
+        return storageTypesDictionary;
     }
 
-    private RepositoryType GetStorageTypeByString(string repositoryType)
+    private StorageType GetStorageTypeByString(string storageType)
     {
-        return Enum.TryParse(repositoryType, out RepositoryType type) ? type : RepositoryType.Xml;
+        return Enum.TryParse(storageType, out StorageType type) ? type : StorageType.Xml;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

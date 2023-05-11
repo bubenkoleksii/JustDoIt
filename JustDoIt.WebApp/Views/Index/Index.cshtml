@@ -28,7 +28,7 @@
 
     string GetRepositoryDescription(string name)
     {
-        var repositoryType = Enum.TryParse(name, out RepositoryType type) ? type : RepositoryType.Xml;
+        var repositoryType = Enum.TryParse(name, out StorageType type) ? type : StorageType.Xml;
 
         var field = repositoryType.GetType().GetField(repositoryType.ToString());
         var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
@@ -52,7 +52,7 @@
 
     <div class="d-end">
         <form asp-controller="Index" asp-action="ChangeStorage" method="get" id="storageForm">
-            <select class="form-select storage-select" name="repositoryType" onchange="document.getElementById('storageForm').submit()">
+            <select class="form-select storage-select" name="storageType" onchange="document.getElementById('storageForm').submit()">
                 @foreach (var storageType in Model.StorageTypes)
                 {
                     @if (storageType.Value)
