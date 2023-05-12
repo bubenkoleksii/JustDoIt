@@ -4,7 +4,6 @@ using JustDoIt.BLL.Implementations.Services;
 using JustDoIt.BLL.Models.Request;
 using JustDoIt.DAL.Entities.Request;
 using JustDoIt.DAL.Entities.Response;
-using JustDoIt.DAL.Implementations;
 using JustDoIt.DAL.Interfaces;
 using JustDoIt.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,7 +28,7 @@ public class CategoryServiceTests
     public async Task Add_Throws_ArgumentException()
     {
         // Arrange
-        var categoryRepositoryFactory = new Mock<Func<StorageType, ICategoryRepository>(storageType => RepositoryFactory.GetCategoryRepository(storageType));
+        var categoryRepositoryFactory = new Mock<Func<StorageType, ICategoryRepository>(repositoryTyo);
         var categoryRepositoryMock = categoryRepositoryFactory.Object(It.IsAny<StorageType>());
 
         var categoryId = Guid.Parse("0E984725-C41C-4BF4-9960-E1C80E27ABA0");

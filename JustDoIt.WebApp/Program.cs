@@ -1,6 +1,7 @@
 using JustDoIt.BLL.Implementations.Services;
 using JustDoIt.BLL.Interfaces;
 using JustDoIt.DAL.Implementations;
+using JustDoIt.DAL.Implementations.Repositories;
 using JustDoIt.DAL.Interfaces;
 using JustDoIt.Shared;
 
@@ -14,14 +15,20 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-var xmlConnectionFactory = new XmlConnectionFactory(builder.Configuration);
-var msSqlServerConnectionFactory = new MsSqlServerConnectionFactory(builder.Configuration);
+builder.Services.AddSingleton<XmlConnectionFactory>();
+builder.Services.AddSingleton<MsSqlServerConnectionFactory>();
+
+builder.Services.AddScoped<CategoryMsSqlServerRepository>();
+builder.Services.AddScoped<CategoryXmlRepository>();
+builder.Services.AddScoped<JobMsSqlServerRepository>();
+builder.Services.AddScoped<JobXmlRepository>();
+
 
 builder.Services.AddScoped<Func<StorageType, IJobRepository>>(serviceProvider =>
-    storageType => RepositoryFactory.GetJobRepository(xmlConnectionFactory, msSqlServerConnectionFactory, storageType));
+    storageType => RepositoryFactory.GetJobRepository(serviceProvider, storageType));
 
 builder.Services.AddScoped<Func<StorageType, ICategoryRepository>>(serviceProvider =>
-    storageType => RepositoryFactory.GetCategoryRepository(xmlConnectionFactory, msSqlServerConnectionFactory, storageType));
+    storageType => RepositoryFactory.GetCategoryRepository(serviceProvider, storageType));
 
 
 var app = builder.Build();

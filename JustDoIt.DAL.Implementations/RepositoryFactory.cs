@@ -6,8 +6,12 @@ namespace JustDoIt.DAL.Implementations;
 
 public static class RepositoryFactory
 {
-    public static ICategoryRepository GetCategoryRepository(XmlConnectionFactory xmlConnectionFactory, MsSqlServerConnectionFactory msSqlServerConnectionFactory, StorageType storageType)
+    public static ICategoryRepository GetCategoryRepository(IServiceProvider serviceProvider, StorageType storageType)
     {
+        var xmlConnectionFactory = (XmlConnectionFactory)serviceProvider.GetService(typeof(XmlConnectionFactory));
+        var msSqlServerConnectionFactory =
+            (MsSqlServerConnectionFactory)serviceProvider.GetService(typeof(MsSqlServerConnectionFactory));
+
         return storageType switch
         {
             StorageType.Xml => new CategoryXmlRepository(xmlConnectionFactory),
@@ -16,8 +20,12 @@ public static class RepositoryFactory
         };
     }
 
-    public static IJobRepository GetJobRepository(XmlConnectionFactory xmlConnectionFactory, MsSqlServerConnectionFactory msSqlServerConnectionFactory, StorageType storageType)
+    public static IJobRepository GetJobRepository(IServiceProvider serviceProvider, StorageType storageType)
     {
+        var xmlConnectionFactory = (XmlConnectionFactory)serviceProvider.GetService(typeof(XmlConnectionFactory));
+        var msSqlServerConnectionFactory =
+            (MsSqlServerConnectionFactory)serviceProvider.GetService(typeof(MsSqlServerConnectionFactory));
+
         return storageType switch
         {
             StorageType.Xml => new JobXmlRepository(xmlConnectionFactory),
