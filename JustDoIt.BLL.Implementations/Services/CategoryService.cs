@@ -12,21 +12,19 @@ public class CategoryService : ICategoryService
 {
     private readonly IMapper _mapper;
 
-    private readonly IRepositoryFactory _repositoryFactory;
+    private readonly Func<StorageType, ICategoryRepository> _categoryRepositoryFactory;
 
-    private ICategoryRepository _categoryRepository;
-
-    public CategoryService(IRepositoryFactory repositoryFactory, IMapper mapper)
+    public CategoryService(Func<StorageType, ICategoryRepository> categoryRepositoryFactory, IMapper mapper)
     {
-        _repositoryFactory = repositoryFactory;
+        _categoryRepositoryFactory = categoryRepositoryFactory;
         _mapper = mapper;
     }
 
     public async Task<ICollection<CategoryModelResponse>> GetAll(StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
+        var categoryRepository = _categoryRepositoryFactory(storageType);
 
-        var categories = await _categoryRepository.GetAll();
+        var categories = await categoryRepository.GetAll();
 
         var categoriesResponse = _mapper.Map<IEnumerable<CategoryModelResponse>>(categories);
         return categoriesResponse.ToList();
@@ -34,23 +32,23 @@ public class CategoryService : ICategoryService
 
     public async Task Add(CategoryModelRequest category, StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
+        var categoryRepository = _categoryRepositoryFactory(storageType);
 
         var categoryRequest = _mapper.Map<CategoryEntityRequest>(category);
 
-        var existingCategory = await _categoryRepository.GetOneByName(categoryRequest.Name);
+        var existingCategory = await categoryRepository.GetOneByName(categoryRequest.Name);
         if (existingCategory != null)
             throw new ArgumentException("The category was not added because a category with that name already exists.");
 
-        await _categoryRepository.Add(categoryRequest);
+        await categoryRepository.Add(categoryRequest);
     }
 
     public async Task Remove(Guid id, StorageType storageType)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
+        var categoryRepository = _categoryRepositoryFactory(storageType);
 
-        var existingCategory = await _categoryRepository.GetOneById(id);
+        var existingCategory = await categoryRepository.GetOneById(id);
         if (existingCategory != null)
-            await _categoryRepository.Remove(id);
+            await categoryRepository.Remove(id);
     }
 }

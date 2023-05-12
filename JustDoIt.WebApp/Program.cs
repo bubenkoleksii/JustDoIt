@@ -11,13 +11,18 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // DI
-builder.Services.AddSingleton<MsSqlServerConnectionFactory>();
-builder.Services.AddSingleton<XmlConnectionFactory>();
-
-builder.Services.AddSingleton<IRepositoryFactory, RepositoryFactory>();
-
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+var xmlConnectionFactory = new XmlConnectionFactory(builder.Configuration);
+var msSqlServerConnectionFactory = new MsSqlServerConnectionFactory(builder.Configuration);
+
+builder.Services.AddScoped<Func<StorageType, IJobRepository>>(serviceProvider =>
+    storageType => RepositoryFactory.GetJobRepository(xmlConnectionFactory, msSqlServerConnectionFactory, storageType));
+
+builder.Services.AddScoped<Func<StorageType, ICategoryRepository>>(serviceProvider =>
+    storageType => RepositoryFactory.GetCategoryRepository(xmlConnectionFactory, msSqlServerConnectionFactory, storageType));
+
 
 var app = builder.Build();
 

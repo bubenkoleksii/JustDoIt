@@ -4,6 +4,7 @@ using JustDoIt.BLL.Implementations.Services;
 using JustDoIt.BLL.Models.Request;
 using JustDoIt.DAL.Entities.Request;
 using JustDoIt.DAL.Entities.Response;
+using JustDoIt.DAL.Implementations;
 using JustDoIt.DAL.Interfaces;
 using JustDoIt.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,8 +29,8 @@ public class CategoryServiceTests
     public async Task Add_Throws_ArgumentException()
     {
         // Arrange
-        var storageFactory = new Mock<IRepositoryFactory>();
-        var categoryRepositoryMock = new Mock<ICategoryRepository>();
+        var categoryRepositoryFactory = new Mock<Func<StorageType, ICategoryRepository>(storageType => RepositoryFactory.GetCategoryRepository(storageType));
+        var categoryRepositoryMock = categoryRepositoryFactory.Object(It.IsAny<StorageType>());
 
         var categoryId = Guid.Parse("0E984725-C41C-4BF4-9960-E1C80E27ABA0");
         var categoryName = "Task1";
@@ -37,11 +38,11 @@ public class CategoryServiceTests
         var categoryRequest = new CategoryModelRequest { Name = categoryName };
         var category = new CategoryEntityResponse { Id = categoryId };
 
-        categoryRepositoryMock.Setup(repo => repo.GetOneByName(categoryName)).ReturnsAsync(category);
-        storageFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
+        categoryRepositoryFactory.Setup(repo => repo.GetOneByName(categoryName)).ReturnsAsync(category);
+        categoryFactory.Setup(repo => repo.GetCategoryRepository(It.IsAny<StorageType>()))
             .Returns(categoryRepositoryMock.Object);
 
-        var categoryService = new CategoryService(storageFactory.Object, _mockMapper);
+        var categoryService = new CategoryService(categoryFactory.Object, _mockMapper);
 
         // Act
         // Assert

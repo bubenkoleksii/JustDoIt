@@ -12,24 +12,22 @@ public class JobService : IJobService
 {
     private readonly IMapper _mapper;
 
-    private readonly IRepositoryFactory _repositoryFactory;
+    private readonly Func<StorageType, IJobRepository> _jobRepositoryFactory;
 
-    private ICategoryRepository _categoryRepository;
+    private readonly Func<StorageType, ICategoryRepository> _categoryRepositoryFactory;
 
-    private IJobRepository _jobRepository;
-
-    public JobService(IRepositoryFactory repositoryFactory, IMapper mapper)
+    public JobService(Func<StorageType, IJobRepository> jobRepositoryFactory, Func<StorageType, ICategoryRepository> categoryRepositoryFactory, IMapper mapper)
     {
-        _repositoryFactory = repositoryFactory;
+        _jobRepositoryFactory = jobRepositoryFactory;
+        _categoryRepositoryFactory = categoryRepositoryFactory;
         _mapper = mapper;
     }
 
     public async Task<ICollection<JobModelResponse>> GetAll(StorageType storageType, bool sortByDueDate = true)
     {
-        _jobRepository = _repositoryFactory.GetJobRepository(storageType);
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
+        var jobRepository = _jobRepositoryFactory(storageType);
 
-        var jobs = await _jobRepository.GetAll();
+        var jobs = await jobRepository.GetAll();
 
         var jobsResponse = _mapper.Map<IEnumerable<JobModelResponse>>(jobs);
         return jobsResponse.ToList();
@@ -38,14 +36,14 @@ public class JobService : IJobService
     public async Task<ICollection<JobModelResponse>> GetByCategory(Guid categoryId, StorageType storageType,
         bool sortByDueDate = true)
     {
-        _categoryRepository = _repositoryFactory.GetCategoryRepository(storageType);
-        _jobRepository = _repositoryFactory.GetJobRepository(storageType);
+        var jobRepository = _jobRepositoryFactory(storageType);
+        var categoryRepository = _categoryRepositoryFactory(storageType);
 
-        var existingCategory = await _categoryRepository.GetOneById(categoryId);
+        var existingCategory = await categoryRepository.GetOneById(categoryId);
         if (existingCategory == null)
             throw new ArgumentNullException("The jobs was not selected because category not found.");
 
-        var jobs = await _jobRepository.GetByCategory(categoryId);
+        var jobs = await jobRepository.GetByCategory(categoryId);
 
         var jobsResponse = _mapper.Map<IEnumerable<JobModelResponse>>(jobs);
         return jobsResponse.ToList();
@@ -53,33 +51,33 @@ public class JobService : IJobService
 
     public async Task Add(JobModelRequest job, StorageType storageType)
     {
-        _jobRepository = _repositoryFactory.GetJobRepository(storageType);
+        var jobRepository = _jobRepositoryFactory(storageType);
 
         var jobRequest = _mapper.Map<JobEntityRequest>(job);
-        await _jobRepository.Add(jobRequest);
+        await jobRepository.Add(jobRequest);
     }
 
     public async Task Remove(Guid id, StorageType storageType)
     {
-        _jobRepository = _repositoryFactory.GetJobRepository(storageType);
+        var jobRepository = _jobRepositoryFactory(storageType);
 
-        var existingJob = await _jobRepository.GetOneById(id);
+        var existingJob = await jobRepository.GetOneById(id);
 
         if (existingJob != null)
-            await _jobRepository.Remove(id);
+            await jobRepository.Remove(id);
     }
 
     public async Task Check(Guid id, StorageType storageType)
     {
-        _jobRepository = _repositoryFactory.GetJobRepository(storageType);
+        var jobRepository = _jobRepositoryFactory(storageType);
 
-        var existingJob = await _jobRepository.GetOneById(id);
+        var existingJob = await jobRepository.GetOneById(id);
         if (existingJob == null)
             throw new ArgumentNullException("The job was not found and its status cannot be changed.");
 
         if (existingJob.IsCompleted)
-            await _jobRepository.Uncheck(id);
+            await jobRepository.Uncheck(id);
         else
-            await _jobRepository.Check(id);
+            await jobRepository.Check(id);
     }
 }

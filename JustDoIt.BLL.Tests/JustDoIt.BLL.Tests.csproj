@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\JustDoIt.BLL.Implementations\JustDoIt.BLL.Implementations.csproj" />
+		<ProjectReference Include="..\JustDoIt.DAL.Implementations\JustDoIt.DAL.Implementations.csproj" />
 	</ItemGroup>
 
 </Project>
