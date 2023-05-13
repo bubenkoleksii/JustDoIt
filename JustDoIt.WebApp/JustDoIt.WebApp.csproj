@@ -16,11 +16,12 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+		<PackageReference Include="GraphQL" Version="7.4.1" />
+		<PackageReference Include="GraphQL.NewtonsoftJson" Version="7.4.1" />
+		<PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.4.0" />
+		<PackageReference Include="GraphQL.Server.Ui.Altair" Version="7.4.0" />
+		<PackageReference Include="GraphQL.SystemTextJson" Version="7.4.1" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="GraphQl\" />
 	</ItemGroup>
 
 </Project>
