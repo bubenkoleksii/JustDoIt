@@ -26,7 +26,6 @@ builder.Services.AddScoped<CategoryXmlRepository>();
 builder.Services.AddScoped<JobMsSqlServerRepository>();
 builder.Services.AddScoped<JobXmlRepository>();
 
-
 builder.Services.AddScoped<Func<StorageType, IJobRepository>>(serviceProvider =>
     storageType => RepositoryFactory.GetJobRepository(serviceProvider, storageType));
 
