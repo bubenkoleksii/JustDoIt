@@ -33,4 +33,14 @@ public static class XmlStorageHelper
             writer.WriteEndDocument();
         }
     }
+
+    public static StorageType GetStorageTypeByString(string storageType)
+    {
+        if (!Enum.TryParse(storageType, out StorageType type))
+        {
+            throw new ArgumentOutOfRangeException(nameof(storageType), storageType, null);
+        }
+
+        return type;
+    }
 }

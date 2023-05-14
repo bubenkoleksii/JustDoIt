@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using GraphQL;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
 using JustDoIt.BLL.Interfaces;
@@ -11,26 +10,21 @@ namespace JustDoIt.WebApp.GraphQl.Category;
 
 public class CategoryQuery : ObjectGraphType
 {
-    public CategoryQuery(IMapper  mapper) {
+    public CategoryQuery(IHttpContextAccessor contextAccessor, IMapper  mapper) {
 
         Field<ListGraphType<CategoryResponseType>>("getAll")
             .Resolve()
             .WithScope()
             .WithService<ICategoryService>()
-            .ResolveAsync(async (context, service) =>
+            .ResolveAsync(async (_, service) =>
             {
-                var categories = await service.GetAll(StorageType.Xml);
+                var storageType = 
+                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                
+                var categories = await service.GetAll(storageType);
 
                 var categoriesResponse = mapper.Map<ICollection<CategoryResponse>>(categories);
                 return categoriesResponse;
-            });
-
-        Field<CategoryResponseType>("get")
-            .Resolve(context => new CategoryResponse()
-            {
-                Id = new Guid(),
-                Name = "Cat1",
-                CountOfJobs = 5
             });
     }
 }

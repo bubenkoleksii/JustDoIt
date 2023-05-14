@@ -3,7 +3,7 @@ using JustDoIt.WebApp.Models.Request;
 
 namespace JustDoIt.WebApp.GraphQl.Category.Types;
 
-public class CategoryRequestType : ObjectGraphType<CategoryRequest>
+public class CategoryRequestType : InputObjectGraphType<CategoryRequest>
 {
     public CategoryRequestType()
     {

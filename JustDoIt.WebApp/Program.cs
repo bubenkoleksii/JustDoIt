@@ -40,6 +40,8 @@ builder.Services.AddGraphQL(builder => builder
     .AddGraphTypes(typeof(JobSchema).Assembly)
     .AddGraphTypes(typeof(CategorySchema).Assembly));
 
+builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

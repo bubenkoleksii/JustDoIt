@@ -28,7 +28,7 @@
 
     string GetRepositoryDescription(string name)
     {
-        var repositoryType = Enum.TryParse(name, out StorageType type) ? type : StorageType.Xml;
+        var repositoryType = XmlStorageHelper.GetStorageTypeByString(name);
 
         var field = repositoryType.GetType().GetField(repositoryType.ToString());
         var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));

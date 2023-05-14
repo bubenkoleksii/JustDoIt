@@ -3,7 +3,7 @@ using JustDoIt.WebApp.Models.Request;
 
 namespace JustDoIt.WebApp.GraphQl.Job.Types;
 
-public class JobRequestType : ObjectGraphType<JobRequest>
+public class JobRequestType : InputObjectGraphType<JobRequest>
 {
     public JobRequestType()
     {
