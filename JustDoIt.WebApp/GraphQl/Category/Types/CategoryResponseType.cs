@@ -9,11 +9,11 @@ public class CategoryResponseType : ObjectGraphType<CategoryResponse>
     {
         Name = nameof(CategoryResponse);
 
-        Field(i => i.Id, nullable: false, type: typeof(IdGraphType))
+        Field(i => i.Id, false, typeof(IdGraphType))
             .Description("Id field for category object");
-        Field(i => i.Name, nullable: false)
+        Field(i => i.Name, false)
             .Description("Name field for category object");
-        Field(i => i.CountOfJobs, nullable: false, type: typeof(IntGraphType))
+        Field(i => i.CountOfJobs, false, typeof(IntGraphType))
             .Description("Count of jobs field for category object");
     }
 }

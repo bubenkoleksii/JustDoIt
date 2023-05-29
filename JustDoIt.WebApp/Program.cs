@@ -66,7 +66,7 @@ app.MapControllerRoute(
     "default",
     "{controller=Index}/{action=Index}/{id?}");
 
-XmlStorageHelper.CreateXmlStorageIfNotExists(app.Configuration.GetConnectionString("XmlStoragePath"),
+StorageHelper.CreateXmlStorageIfNotExists(app.Configuration.GetConnectionString("XmlStoragePath"),
     app.Configuration.GetConnectionString("XmlJobStoragePath"),
     app.Configuration.GetConnectionString("XmlCategoryStoragePath"));
 

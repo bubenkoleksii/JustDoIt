@@ -9,7 +9,7 @@ public class CategoryRequestType : InputObjectGraphType<CategoryRequest>
     {
         Name = nameof(CategoryRequest);
 
-        Field(i => i.Name, nullable: false)
+        Field(i => i.Name, false)
             .Description("Name field for category object");
     }
 }

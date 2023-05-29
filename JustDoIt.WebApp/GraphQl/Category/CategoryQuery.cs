@@ -10,17 +10,17 @@ namespace JustDoIt.WebApp.GraphQl.Category;
 
 public class CategoryQuery : ObjectGraphType
 {
-    public CategoryQuery(IHttpContextAccessor contextAccessor, IMapper  mapper) {
-
+    public CategoryQuery(IHttpContextAccessor contextAccessor, IMapper mapper)
+    {
         Field<ListGraphType<CategoryResponseType>>("getAll")
             .Resolve()
             .WithScope()
             .WithService<ICategoryService>()
             .ResolveAsync(async (_, service) =>
             {
-                var storageType = 
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
-                
+                var storageType =
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+
                 var categories = await service.GetAll(storageType);
 
                 var categoriesResponse = mapper.Map<ICollection<CategoryResponse>>(categories);

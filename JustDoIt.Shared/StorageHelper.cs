@@ -2,7 +2,7 @@
 
 namespace JustDoIt.Shared;
 
-public static class XmlStorageHelper
+public static class StorageHelper
 {
     public static void CreateXmlStorageIfNotExists(string storagePath, string jobStoragePath,
         string categoryStoragePath)
@@ -37,9 +37,7 @@ public static class XmlStorageHelper
     public static StorageType GetStorageTypeByString(string storageType)
     {
         if (!Enum.TryParse(storageType, out StorageType type))
-        {
             throw new ArgumentOutOfRangeException(nameof(storageType), storageType, null);
-        }
 
         return type;
     }

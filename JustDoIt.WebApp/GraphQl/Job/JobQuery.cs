@@ -20,7 +20,7 @@ public class JobQuery : ObjectGraphType
             .ResolveAsync(async (_, service) =>
             {
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 var jobs = await service.GetAll(storageType);
 
@@ -37,7 +37,7 @@ public class JobQuery : ObjectGraphType
             {
                 var categoryId = context.GetArgument<Guid>("categoryId");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 var jobs = await service.GetByCategory(categoryId, storageType);
 

@@ -10,13 +10,13 @@ namespace JustDoIt.BLL.Implementations.Services;
 
 public class JobService : IJobService
 {
-    private readonly IMapper _mapper;
-
-    private readonly Func<StorageType, IJobRepository> _jobRepositoryFactory;
-
     private readonly Func<StorageType, ICategoryRepository> _categoryRepositoryFactory;
 
-    public JobService(Func<StorageType, IJobRepository> jobRepositoryFactory, Func<StorageType, ICategoryRepository> categoryRepositoryFactory, IMapper mapper)
+    private readonly Func<StorageType, IJobRepository> _jobRepositoryFactory;
+    private readonly IMapper _mapper;
+
+    public JobService(Func<StorageType, IJobRepository> jobRepositoryFactory,
+        Func<StorageType, ICategoryRepository> categoryRepositoryFactory, IMapper mapper)
     {
         _jobRepositoryFactory = jobRepositoryFactory;
         _categoryRepositoryFactory = categoryRepositoryFactory;

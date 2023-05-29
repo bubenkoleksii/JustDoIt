@@ -11,11 +11,11 @@ public class JobRequestType : InputObjectGraphType<JobRequest>
 
         Field(i => i.CategoryId, type: typeof(IdGraphType), nullable: false)
             .Description("Category id field for job object");
-        Field(i => i.Name, nullable: false)
+        Field(i => i.Name, false)
             .Description("Name field for job object");
-        Field(i => i.IsCompleted, nullable: false, type: typeof(BooleanGraphType))
+        Field(i => i.IsCompleted, false, typeof(BooleanGraphType))
             .Description("Status field for job object");
-        Field(i => i.DueDate, nullable: false, typeof(DateTimeGraphType))
+        Field(i => i.DueDate, false, typeof(DateTimeGraphType))
             .Description("Due date field for job object");
     }
 }

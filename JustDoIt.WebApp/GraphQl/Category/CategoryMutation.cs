@@ -23,10 +23,10 @@ public class CategoryMutation : ObjectGraphType
             {
                 var category = context.GetArgument<CategoryRequest>("category");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 var categoryRequest = mapper.Map<CategoryModelRequest>(category);
-                
+
                 await service.Add(categoryRequest, storageType);
                 return true;
             });
@@ -40,11 +40,10 @@ public class CategoryMutation : ObjectGraphType
             {
                 var id = context.GetArgument<Guid>("id");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 await service.Remove(id, storageType);
                 return true;
             });
-
     }
 }

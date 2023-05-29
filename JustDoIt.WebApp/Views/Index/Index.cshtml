@@ -28,7 +28,7 @@
 
     string GetRepositoryDescription(string name)
     {
-        var repositoryType = XmlStorageHelper.GetStorageTypeByString(name);
+        var repositoryType = StorageHelper.GetStorageTypeByString(name);
 
         var field = repositoryType.GetType().GetField(repositoryType.ToString());
         var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));

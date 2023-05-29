@@ -10,9 +10,8 @@ namespace JustDoIt.BLL.Implementations.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly IMapper _mapper;
-
     private readonly Func<StorageType, ICategoryRepository> _categoryRepositoryFactory;
+    private readonly IMapper _mapper;
 
     public CategoryService(Func<StorageType, ICategoryRepository> categoryRepositoryFactory, IMapper mapper)
     {

@@ -114,7 +114,7 @@ public class IndexController : Controller
             }
 
             var jobModelRequest = _mapper.Map<JobModelRequest>(job);
-            await _jobService.Add(jobModelRequest, XmlStorageHelper.GetStorageTypeByString(storageType));
+            await _jobService.Add(jobModelRequest, StorageHelper.GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -132,7 +132,7 @@ public class IndexController : Controller
 
         try
         {
-            await _jobService.Remove(id, XmlStorageHelper.GetStorageTypeByString(storageType));
+            await _jobService.Remove(id, StorageHelper.GetStorageTypeByString(storageType));
 
             if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
@@ -154,7 +154,7 @@ public class IndexController : Controller
 
         try
         {
-            await _jobService.Check(id, XmlStorageHelper.GetStorageTypeByString(storageType));
+            await _jobService.Check(id, StorageHelper.GetStorageTypeByString(storageType));
 
             if (!isSingleCategoryView)
                 return RedirectToAction(nameof(Index));
@@ -193,7 +193,7 @@ public class IndexController : Controller
             }
 
             var categoryRequest = _mapper.Map<CategoryModelRequest>(category);
-            await _categoryService.Add(categoryRequest, XmlStorageHelper.GetStorageTypeByString(storageType));
+            await _categoryService.Add(categoryRequest, StorageHelper.GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -218,7 +218,7 @@ public class IndexController : Controller
 
         try
         {
-            await _categoryService.Remove(id, XmlStorageHelper.GetStorageTypeByString(storageType));
+            await _categoryService.Remove(id, StorageHelper.GetStorageTypeByString(storageType));
 
             return RedirectToAction(nameof(Index));
         }
@@ -230,10 +230,10 @@ public class IndexController : Controller
 
     private async Task<IndexViewModel> GetAllCategoriesAndJobs(string storageType)
     {
-        var jobs = await _jobService.GetAll(XmlStorageHelper.GetStorageTypeByString(storageType));
+        var jobs = await _jobService.GetAll(StorageHelper.GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
-        var categories = await _categoryService.GetAll(XmlStorageHelper.GetStorageTypeByString(storageType));
+        var categories = await _categoryService.GetAll(StorageHelper.GetStorageTypeByString(storageType));
         var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
         var storageTypesDictionary = GetStorageTypesDictionary(storageType);
@@ -250,10 +250,10 @@ public class IndexController : Controller
 
     private async Task<IndexViewModel> GetCategoriesAndJobsByCategory(Guid categoryId, string storageType)
     {
-        var jobs = await _jobService.GetByCategory(categoryId, XmlStorageHelper.GetStorageTypeByString(storageType));
+        var jobs = await _jobService.GetByCategory(categoryId, StorageHelper.GetStorageTypeByString(storageType));
         var jobsResponse = _mapper.Map<ICollection<JobResponse>>(jobs);
 
-        var categories = await _categoryService.GetAll(XmlStorageHelper.GetStorageTypeByString(storageType));
+        var categories = await _categoryService.GetAll(StorageHelper.GetStorageTypeByString(storageType));
         var categoriesResponse = _mapper.Map<ICollection<CategoryResponse>>(categories);
 
         var storageTypesDictionary = GetStorageTypesDictionary(storageType);

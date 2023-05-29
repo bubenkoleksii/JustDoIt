@@ -23,7 +23,7 @@ public class JobMutation : ObjectGraphType
             {
                 var job = context.GetArgument<JobRequest>("job");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 var jobRequest = mapper.Map<JobModelRequest>(job);
 
@@ -40,7 +40,7 @@ public class JobMutation : ObjectGraphType
             {
                 var id = context.GetArgument<Guid>("id");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 await service.Remove(id, storageType);
                 return true;
@@ -55,7 +55,7 @@ public class JobMutation : ObjectGraphType
             {
                 var id = context.GetArgument<Guid>("id");
                 var storageType =
-                    XmlStorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
+                    StorageHelper.GetStorageTypeByString(contextAccessor.HttpContext!.Request.Headers["StorageType"]!);
 
                 await service.Check(id, storageType);
                 return true;
