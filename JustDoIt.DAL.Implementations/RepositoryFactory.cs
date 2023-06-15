@@ -11,8 +11,7 @@ public static class RepositoryFactory
         return storageType switch
         {
             StorageType.Xml => (ICategoryRepository)serviceProvider.GetService(typeof(CategoryXmlRepository))!,
-            StorageType.MsSqlServer => (ICategoryRepository)serviceProvider.GetService(
-                typeof(CategoryMsSqlServerRepository))!,
+            StorageType.MsSqlServer => (ICategoryRepository)serviceProvider.GetService(typeof(CategoryMsSqlServerRepository))!,
             _ => throw new ArgumentOutOfRangeException(nameof(storageType), storageType, null)
         };
     }

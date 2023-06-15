@@ -1,4 +1,7 @@
 using GraphQL;
+using GraphQL.Resolvers;
+using GraphQL.Server.Transports.AspNetCore;
+using GraphQL.Types;
 using JustDoIt.BLL.Implementations.Services;
 using JustDoIt.BLL.Interfaces;
 using JustDoIt.DAL.Implementations;
@@ -35,10 +38,8 @@ builder.Services.AddScoped<Func<StorageType, ICategoryRepository>>(serviceProvid
 // GraphQl
 builder.Services.AddGraphQL(builder => builder
     .AddSystemTextJson()
-    .AddSchema<CategorySchema>()
-    .AddSchema<JobSchema>()
-    .AddGraphTypes(typeof(JobSchema).Assembly)
-    .AddGraphTypes(typeof(CategorySchema).Assembly));
+    .AddSchema<RootSchema>()
+    .AddGraphTypes(typeof(RootSchema).Assembly));
 
 builder.Services.AddHttpContextAccessor();
 
@@ -57,8 +58,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.UseGraphQL<JobSchema>("/job");
-app.UseGraphQL<CategorySchema>("/category");
+//app.UseGraphQL<JobSchema>("/job");
+//app.UseGraphQL<CategorySchema>("/category");
+
+// Use the combined schema for the endpoint
+app.UseGraphQL();
 
 app.UseGraphQLAltair();
 
